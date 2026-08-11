@@ -1,0 +1,141 @@
+import Link from "next/link";
+import {
+  Shirt,
+  EyeOff,
+  Tags,
+  MousePointerClick,
+  Plus,
+  TrendingUp,
+  AlertTriangle,
+} from "lucide-react";
+import { getAdminStats, getTopProducts, getRecentClicks } from "@/lib/admin-data";
+import { PageHeader } from "@/components/admin/page-header";
+import { StatCard } from "@/components/admin/stat-card";
+import { buttonClasses } from "@/components/ui/button";
+import { formatDate } from "@/lib/utils";
+
+export const dynamic = "force-dynamic";
+
+export default async function DashboardPage() {
+  const [stats, top, recent] = await Promise.all([
+    getAdminStats(),
+    getTopProducts(6),
+    getRecentClicks(8),
+  ]);
+
+  return (
+    <div>
+      <PageHeader
+        title="İdarə paneli"
+        description="Mağazanın ümumi vəziyyəti və maraq statistikası."
+        action={
+          <Link
+            href="/admin/mehsullar/yeni"
+            className={buttonClasses("gold", "md")}
+          >
+            <Plus className="h-4 w-4" />
+            Yeni məhsul
+          </Link>
+        }
+      />
+
+      {!stats.connected && (
+        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+          <p>
+            Verilənlər bazasına qoşulma yoxdur. <code>.env</code> faylında{" "}
+            <code>DATABASE_URL</code> düzgün olduğundan və{" "}
+            <code>npm run db:push</code> icra edildiyindən əmin olun.
+          </p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <StatCard label="Aktiv məhsul" value={stats.active} icon={Shirt} accent />
+        <StatCard label="Gizli məhsul" value={stats.hidden} icon={EyeOff} />
+        <StatCard label="Kateqoriya" value={stats.categories} icon={Tags} />
+        <StatCard
+          label="7 günlük klik"
+          value={stats.clicks7d}
+          icon={MousePointerClick}
+        />
+      </div>
+
+      <div className="mt-8 grid gap-6 lg:grid-cols-5">
+        {/* Top products */}
+        <div className="lg:col-span-3">
+          <div className="rounded-2xl border border-line bg-surface">
+            <div className="flex items-center gap-2 border-b border-line px-5 py-4">
+              <TrendingUp className="h-4 w-4 text-gold" />
+              <h2 className="font-display text-base font-bold italic text-cream">
+                Ən çox maraq görən formalar
+              </h2>
+            </div>
+            {top.length === 0 ? (
+              <p className="px-5 py-10 text-center text-sm text-muted">
+                Hələ klik qeydə alınmayıb.
+              </p>
+            ) : (
+              <ul className="divide-y divide-line">
+                {top.map((p, i) => (
+                  <li
+                    key={p.id}
+                    className="flex items-center gap-4 px-5 py-3.5"
+                  >
+                    <span className="w-5 font-display text-lg font-bold italic text-line-strong">
+                      {i + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <Link
+                        href={`/forma/${p.slug}`}
+                        target="_blank"
+                        className="truncate font-medium text-cream hover:text-gold"
+                      >
+                        {p.name}
+                      </Link>
+                      <p className="text-xs text-faint">{p.categoryName}</p>
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/10 px-2.5 py-1 text-xs font-semibold text-gold">
+                      <MousePointerClick className="h-3.5 w-3.5" />
+                      {p.clicks}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        {/* Recent clicks */}
+        <div className="lg:col-span-2">
+          <div className="rounded-2xl border border-line bg-surface">
+            <div className="border-b border-line px-5 py-4">
+              <h2 className="font-display text-base font-bold italic text-cream">
+                Son kliklər
+              </h2>
+            </div>
+            {recent.length === 0 ? (
+              <p className="px-5 py-10 text-center text-sm text-muted">
+                Fəaliyyət yoxdur.
+              </p>
+            ) : (
+              <ul className="divide-y divide-line">
+                {recent.map((c) => (
+                  <li key={c.id} className="px-5 py-3">
+                    <p className="truncate text-sm text-cream">
+                      {c.productName}
+                    </p>
+                    <div className="mt-0.5 flex items-center justify-between text-xs text-faint">
+                      <span>Ölçü: {c.size}</span>
+                      <span>{formatDate(c.createdAt)}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

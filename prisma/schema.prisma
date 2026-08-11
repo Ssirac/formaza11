@@ -1,0 +1,59 @@
+// FORMAZA11 — Prisma schema
+// Prod: PostgreSQL (Neon). For local dev you can point DATABASE_URL at a Neon
+// dev branch or a local Postgres instance.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Product {
+  id          String       @id @default(cuid())
+  slug        String       @unique
+  name        String
+  description String       @default("")
+  images      Json         @default("[]") // string[]
+  sizes       Json         @default("[]") // string[]
+  categoryId  String
+  category    Category     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  isHidden    Boolean      @default(false)
+  isFeatured  Boolean      @default(false)
+  clicks      ClickEvent[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([categoryId])
+  @@index([isHidden])
+  @@index([isFeatured])
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  order     Int       @default(0)
+  products  Product[]
+  createdAt DateTime  @default(now())
+
+  @@index([order])
+}
+
+model ClickEvent {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size      String
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+  @@index([createdAt])
+}
+
+model Setting {
+  key   String @id
+  value String
+}

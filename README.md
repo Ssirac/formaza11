@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FORMAZA11 ⚽
 
-## Getting Started
+Futbol formaları üçün kataloq + brend saytı (Azərbaycan bazarı).
+**Qiymət yoxdur** — hər məhsulda “WhatsApp-da soruş” CTA-sı seçilmiş forma + ölçü ilə hazır mesaj açır. Sifariş WhatsApp-da baş verir.
 
-First, run the development server:
+Next.js 16 · React 19 · TypeScript · Tailwind v4 · Prisma 7 (Postgres) · Framer Motion · Cloudinary · iron-session
+
+---
+
+## 🎨 Brend
+
+- Palitra: **qara + qızıl + gümüş** (loqoya uyğun premium look)
+- Şrift: **Kanit** (display, italik) + **Manrope** (mətn)
+- Loqo: `public/brand/formaza11-badge.png` faylını ora at (favicon + OG üçün). Navbar-da vektor nişan (SVG) istifadə olunur, ona görə fayl olmasa belə sayt düzgün görünür.
+
+---
+
+## 🚀 Lokal işə salma
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`.env` faylını doldur (nümunə: `.env.example`):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST/DB?sslmode=require"
+ADMIN_PASSWORD="güclü-parol"
+SESSION_SECRET="ən-azı-32-simvolluq-təsadüfi-string"
+CLOUDINARY_CLOUD_NAME="..."
+CLOUDINARY_API_KEY="..."
+CLOUDINARY_API_SECRET="..."
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="..."
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Bazanı hazırla və işə sal:
 
-## Learn More
+```bash
+npm run db:push     # sxemi bazaya tətbiq et
+npm run db:seed     # 4 kateqoriya + default ayarlar (məhsul əlavə etmir)
+npm run dev         # http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+Admin panel: **http://localhost:3000/admin** → `ADMIN_PASSWORD` ilə daxil ol.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📦 Skriptlər
 
-## Deploy on Vercel
+| Skript | İş |
+|---|---|
+| `npm run dev` | Development server |
+| `npm run build` | `prisma generate` + production build |
+| `npm run start` | Production server |
+| `npm run db:push` | Prisma sxemini bazaya tətbiq et |
+| `npm run db:migrate` | Miqrasiya yarat (dev) |
+| `npm run db:seed` | Kateqoriya + ayarları seed et |
+| `npm run db:studio` | Prisma Studio |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔑 Environment dəyişənləri
+
+| Dəyişən | Təsvir |
+|---|---|
+| `DATABASE_URL` | Neon/Postgres bağlantı stringi |
+| `ADMIN_PASSWORD` | Admin panel parolu |
+| `SESSION_SECRET` | Sessiya cookie-sinin imzalanması (**32+ simvol**) |
+| `CLOUDINARY_CLOUD_NAME` / `_API_KEY` / `_API_SECRET` | Admin şəkil yükləməsi (server) |
+| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | Client tərəf (istəyə bağlı) |
+| `NEXT_PUBLIC_SITE_URL` | Tam domen (SEO, sitemap, OG) |
+
+> Cloudinary açarları boş olsa, admin **şəkil URL-i yapışdırmaqla** məhsul əlavə edə bilər — kod hazırdır.
+
+---
+
+## ☁️ Vercel + Neon deploy
+
+1. **Neon**: [neon.tech](https://neon.tech) — pulsuz Postgres yarat, connection string-i götür.
+2. **GitHub**: layihəni push et.
+3. **Vercel**: “New Project” → reponu import et.
+4. Vercel → Settings → Environment Variables: yuxarıdakı bütün dəyişənləri əlavə et (`NEXT_PUBLIC_SITE_URL` = real domen).
+5. Deploy et. İlk deploy-dan sonra sxemi tətbiq et:
+   ```bash
+   # lokal maşından, prod DATABASE_URL ilə:
+   npx prisma db push
+   npm run db:seed
+   ```
+   (və ya Neon SQL editor / `prisma migrate deploy` istifadə et)
+6. `/admin` → daxil ol → məhsulları əlavə et.
+
+---
+
+## 🗂 Struktur
+
+```
+app/
+  (site)/            → public sayt (navbar + footer)
+    page.tsx         → ana səhifə
+    kataloq/         → kataloq (filter + axtarış)
+    forma/[slug]/    → məhsul detalı
+  admin/
+    login/           → giriş
+    (panel)/         → qorunan panel (dashboard, məhsullar, kateqoriyalar, ayarlar)
+  api/track/         → klik logu (fire-and-forget)
+  sitemap.ts, robots.ts, not-found.tsx
+components/          → ui, site, home, product, catalog, admin, motion
+lib/
+  db.ts, queries.ts, admin-data.ts, session.ts, cloudinary.ts, whatsapp.ts
+  actions/           → server actions (products, categories, settings, auth)
+  generated/prisma/  → Prisma client (git-ignored)
+prisma/schema.prisma, prisma/seed.ts
+proxy.ts             → /admin/* qapısı (Next 16 “proxy” konvensiyası)
+```
+
+---
+
+## ✅ İş məntiqi
+
+- **Gizli məhsul** (`isHidden`) heç yerdə görünmür: ana səhifə, kataloq, axtarış, sitemap, birbaşa URL → 404.
+- **WhatsApp**: `wa.me/<nömrə>?text=...` yeni tab-da açılır; əvvəlcə `POST /api/track` (bloklamadan) klik loglayır. Ölçü seçilməyibsə → çip shake + “Əvvəlcə ölçünü seç”.
+- **Ayarlar** (WhatsApp nömrəsi, sosial linklər, hero mətnləri) bazadadır — redeploy tələb olunmur.
+- Admin: dashboard statistikası, məhsul data-table (inline gizli/seçilmiş switch, silmə), kateqoriya CRUD + sıralama, Cloudinary şəkil yükləmə (drag-reorder).
