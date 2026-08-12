@@ -15,6 +15,17 @@ export const SIZE_GROUPS: SizeGroup[] = [
   { label: "Uşaq ölçüləri (yaş)", sizes: KID_SIZES },
 ];
 
+export const STOCK_STATUSES = [
+  { value: "in_stock", label: "Əldədir" },
+  { value: "on_way", label: "Yoldadır" },
+] as const;
+
+export type StockStatus = (typeof STOCK_STATUSES)[number]["value"];
+
+export function stockLabel(value: string): string {
+  return STOCK_STATUSES.find((s) => s.value === value)?.label ?? "Əldədir";
+}
+
 export const DEFAULT_SETTINGS: Record<string, string> = {
   whatsappNumber: "+994777457080",
   instagramUrl: "",

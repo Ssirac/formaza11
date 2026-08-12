@@ -10,6 +10,7 @@ export type ProductDTO = {
   categorySlug: string;
   isHidden: boolean;
   isFeatured: boolean;
+  stockStatus: string;
   clickCount: number;
   createdAt: string;
 };

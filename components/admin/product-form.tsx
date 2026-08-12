@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { LoaderCircle, Star, EyeOff } from "lucide-react";
 import type { ProductDTO } from "@/lib/types";
-import { SIZE_GROUPS } from "@/lib/constants";
+import { SIZE_GROUPS, STOCK_STATUSES } from "@/lib/constants";
 import { createProduct, updateProduct } from "@/lib/actions/products";
 import { slugify } from "@/lib/utils";
 import { ImageManager } from "./image-manager";
@@ -38,6 +38,9 @@ export function ProductForm({
   const [images, setImages] = useState<string[]>(initial?.images ?? []);
   const [isFeatured, setIsFeatured] = useState(initial?.isFeatured ?? false);
   const [isHidden, setIsHidden] = useState(initial?.isHidden ?? false);
+  const [stockStatus, setStockStatus] = useState<string>(
+    initial?.stockStatus ?? "in_stock"
+  );
 
   const finalSlug = (slugTouched ? slug : slugify(name)) || "forma";
 
@@ -65,6 +68,7 @@ export function ProductForm({
       images,
       isFeatured,
       isHidden,
+      stockStatus: stockStatus as "in_stock" | "on_way",
     };
     startTransition(async () => {
       const res = initial
@@ -192,6 +196,27 @@ export function ProductForm({
 
       {/* Sidebar */}
       <div className="space-y-6">
+        <div className="rounded-2xl border border-line bg-surface p-6">
+          <p className="text-sm font-semibold text-cream">Mövcudluq</p>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            {STOCK_STATUSES.map((s) => (
+              <button
+                key={s.value}
+                type="button"
+                onClick={() => setStockStatus(s.value)}
+                className={cn(
+                  "h-10 rounded-lg border text-sm font-semibold transition-all",
+                  stockStatus === s.value
+                    ? "border-gold bg-gold/15 text-gold"
+                    : "border-line-strong text-muted hover:border-gold/50 hover:text-cream"
+                )}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="space-y-4 rounded-2xl border border-line bg-surface p-6">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2.5">

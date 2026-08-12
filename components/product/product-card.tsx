@@ -7,6 +7,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Shirt } from "lucide-react";
 import type { ProductDTO } from "@/lib/types";
 import { SizeChips } from "./size-chips";
+import { StockBadge } from "./stock-badge";
 import { trackAndOpen } from "./order-util";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { buttonClasses } from "@/components/ui/button";
@@ -137,6 +138,7 @@ export function ProductCard({
       />
 
       <div className="flex flex-1 flex-col gap-3 p-4">
+        <StockBadge status={product.stockStatus} className="self-start" />
         <Link href={`/forma/${product.slug}`} className="min-w-0">
           <h3 className="truncate font-display text-lg font-bold italic leading-tight text-cream transition-colors group-hover:text-gold">
             {product.name}

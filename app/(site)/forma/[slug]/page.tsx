@@ -9,6 +9,7 @@ import {
 } from "@/lib/queries";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductPurchase } from "@/components/product/product-purchase";
+import { StockBadge } from "@/components/product/stock-badge";
 import { ProductGrid } from "@/components/product/product-grid";
 import { SectionHeading } from "@/components/home/section-heading";
 
@@ -71,9 +72,12 @@ export default async function ProductPage({ params }: { params: Params }) {
         <ProductGallery images={product.images} alt={product.name} />
 
         <div className="lg:py-4">
-          <span className="inline-flex items-center rounded-full border border-line-strong bg-surface px-3 py-1 text-xs font-semibold uppercase tracking-wide text-silver">
-            {product.categoryName}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center rounded-full border border-line-strong bg-surface px-3 py-1 text-xs font-semibold uppercase tracking-wide text-silver">
+              {product.categoryName}
+            </span>
+            <StockBadge status={product.stockStatus} />
+          </div>
           <h1 className="mt-4 font-display text-3xl font-extrabold italic leading-tight text-cream sm:text-4xl">
             {product.name}
           </h1>

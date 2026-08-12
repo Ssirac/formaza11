@@ -17,6 +17,7 @@ function toProductDTO(p: any): ProductDTO {
     categorySlug: p.category?.slug ?? "",
     isHidden: p.isHidden,
     isFeatured: p.isFeatured,
+    stockStatus: p.stockStatus ?? "in_stock",
     clickCount: p._count?.clicks ?? 0,
     createdAt:
       p.createdAt instanceof Date ? p.createdAt.toISOString() : String(p.createdAt),

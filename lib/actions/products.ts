@@ -16,6 +16,7 @@ const ProductInput = z.object({
   images: z.array(z.string().url()).default([]),
   isFeatured: z.boolean().default(false),
   isHidden: z.boolean().default(false),
+  stockStatus: z.enum(["in_stock", "on_way"]).default("in_stock"),
 });
 
 export type ProductInputData = z.infer<typeof ProductInput>;
@@ -61,6 +62,7 @@ export async function createProduct(
         categoryId: data.categoryId,
         isFeatured: data.isFeatured,
         isHidden: data.isHidden,
+        stockStatus: data.stockStatus,
       },
     });
     revalidateAll(slug);
@@ -89,6 +91,7 @@ export async function updateProduct(
         categoryId: data.categoryId,
         isFeatured: data.isFeatured,
         isHidden: data.isHidden,
+        stockStatus: data.stockStatus,
       },
     });
     revalidateAll(slug);
