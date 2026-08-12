@@ -66,6 +66,12 @@ export default function RootLayout({
       className={`${kanit.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-ink text-cream">
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{if(localStorage.getItem('formaza11-theme')==='light')document.documentElement.classList.add('light');}catch(e){}})();",
+          }}
+        />
         {children}
         <Toaster
           position="bottom-right"

@@ -19,12 +19,12 @@ export function Hero({ title, subtitle }: { title: string; subtitle: string }) {
   const y = useSpring(my, { stiffness: 250, damping: 15 });
 
   return (
-    <section className="relative flex min-h-[92vh] items-center overflow-hidden">
+    <section className="always-dark relative flex min-h-[92vh] items-center overflow-hidden bg-[#08080a] text-cream">
       {/* Animated gold shader backdrop */}
       <ShaderAnimation className="opacity-[0.5]" />
       {/* Contrast overlays so the typography stays legible */}
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/70 to-ink"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-black"
         aria-hidden
       />
       <div
@@ -144,7 +144,7 @@ export function Hero({ title, subtitle }: { title: string; subtitle: string }) {
         </motion.div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black to-transparent" />
     </section>
   );
 }

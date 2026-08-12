@@ -8,6 +8,7 @@ import { WhatsAppIcon } from "@/components/ui/icons";
 import { buildContactUrl } from "@/lib/whatsapp";
 import { buttonClasses } from "@/components/ui/button";
 import { StoreButtons } from "@/components/store/store-buttons";
+import { ThemeToggle } from "@/components/site/theme-toggle";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
@@ -60,6 +61,7 @@ export function Navbar({ whatsappNumber }: { whatsappNumber: string }) {
         </nav>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <StoreButtons />
           <a
             href={contact}

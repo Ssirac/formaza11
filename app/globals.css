@@ -248,3 +248,65 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ========================================================================
+   Light theme — swap neutral tokens; gold/silver deepen so they read on white
+   ======================================================================== */
+html.light {
+  --color-ink: #f5f6f8;
+  --color-ink-2: #eceef2;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4f5f7;
+  --color-surface-3: #e8eaee;
+  --color-line: #e6e8ec;
+  --color-line-strong: #d0d5dd;
+  --color-cream: #0c0d10;
+  --color-muted: #55606e;
+  --color-faint: #8b93a0;
+  --color-gold: #a9791f;
+  --color-gold-bright: #caa03a;
+  --color-gold-deep: #7c5416;
+  color-scheme: light;
+}
+
+html.light .text-metal-gold {
+  background: linear-gradient(180deg, #b3831f 0%, #7c5416 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+html.light .text-metal-silver {
+  background: linear-gradient(180deg, #59616e 0%, #363c45 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Sections that stay dark in BOTH themes (hero, CTA band). Restore the
+   dark-mode text tokens + bright gold within them. */
+.always-dark {
+  --color-cream: #f5f4f0;
+  --color-muted: #9a9aa4;
+  --color-faint: #6b6b74;
+  --color-line: #26262e;
+  --color-line-strong: #33333d;
+  --color-surface: #101013;
+  --color-surface-2: #17171c;
+  --color-surface-3: #1e1e25;
+}
+.always-dark .text-metal-gold {
+  background: linear-gradient(180deg, #fbeeb8 0%, #f6dc8f 22%, #e3b23c 52%, #b8842a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.always-dark .text-metal-silver {
+  background: linear-gradient(180deg, #ffffff 0%, #c8ccd2 45%, #8a8f99 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
