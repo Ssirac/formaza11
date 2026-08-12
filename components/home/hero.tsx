@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { BadgeMark } from "@/components/ui/logo";
 import { buttonClasses } from "@/components/ui/button";
 import { ShaderAnimation } from "@/components/ui/shader-lines";
 
@@ -132,7 +132,14 @@ export function Hero({ title, subtitle }: { title: string; subtitle: string }) {
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             className="glow-gold rounded-full"
           >
-            <BadgeMark className="h-56 w-56 drop-shadow-[0_0_40px_rgba(227,178,60,0.35)]" />
+            <Image
+              src="/brand/formaza11-badge.png"
+              alt="FORMAZA11"
+              width={224}
+              height={224}
+              priority
+              className="h-56 w-56 rounded-full object-contain drop-shadow-[0_0_40px_rgba(227,178,60,0.35)]"
+            />
           </motion.div>
         </motion.div>
       </div>

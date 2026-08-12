@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
@@ -68,7 +69,14 @@ export function Logo({
 }) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <BadgeMark />
+      <Image
+        src="/brand/formaza11-badge.png"
+        alt="FORMAZA11"
+        width={40}
+        height={40}
+        priority
+        className="h-9 w-9 shrink-0 rounded-full object-contain"
+      />
       {showText && (
         <span className="font-display text-xl font-extrabold italic tracking-tight leading-none">
           <span className="text-metal-gold">FORMAZA</span>
