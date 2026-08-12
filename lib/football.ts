@@ -35,6 +35,52 @@ async function fetchLeague(id: string): Promise<Match[]> {
   }
 }
 
+export type NewsItem = {
+  title: string;
+  link: string;
+  date: string;
+  source: string;
+};
+
+function extractTag(block: string, tag: string): string {
+  const m = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"));
+  let v = m ? m[1].trim() : "";
+  v = v
+    .replace(/^<!\[CDATA\[/, "")
+    .replace(/\]\]>$/, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .trim();
+  return v;
+}
+
+// Latest football headlines from a public RSS feed. We show the headline,
+// date and source, linking out to the original article (aggregation only).
+export async function getFootballNews(limit = 8): Promise<NewsItem[]> {
+  try {
+    const res = await fetch(
+      "https://feeds.bbci.co.uk/sport/football/rss.xml",
+      { next: { revalidate: 1800 } }
+    );
+    if (!res.ok) return [];
+    const xml = await res.text();
+    const items: NewsItem[] = [];
+    const itemRegex = /<item>([\s\S]*?)<\/item>/g;
+    let m: RegExpExecArray | null;
+    while ((m = itemRegex.exec(xml)) && items.length < limit) {
+      const block = m[1];
+      const title = extractTag(block, "title");
+      const link = extractTag(block, "link");
+      const date = extractTag(block, "pubDate");
+      if (title && link) items.push({ title, link, date, source: "BBC Sport" });
+    }
+    return items;
+  } catch {
+    return [];
+  }
+}
+
 export async function getRecentMatches(limit = 6): Promise<Match[]> {
   // English Premier League (4328) + La Liga (4335) for a fuller board.
   const [epl, laliga] = await Promise.all([

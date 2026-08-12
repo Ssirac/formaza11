@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 
 const LINKS = [
   { label: "Kataloq", href: "/kataloq" },
+  { label: "Xəbərlər", href: "/xeber" },
   { label: "Necə sifariş", href: "/#nece-sifaris" },
   { label: "Ölçü bələdçisi", href: "/#olcu-beledcisi" },
   { label: "FAQ", href: "/#faq" },
