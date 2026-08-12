@@ -9,8 +9,9 @@ export function trackAndOpen(params: {
   productName: string;
   size: string;
   whatsappNumber: string;
+  slug?: string;
 }) {
-  const { productId, productName, size, whatsappNumber } = params;
+  const { productId, productName, size, whatsappNumber, slug } = params;
   try {
     fetch("/api/track", {
       method: "POST",
@@ -21,6 +22,10 @@ export function trackAndOpen(params: {
   } catch {
     // tracking must never surface an error
   }
-  const url = buildWhatsAppUrl(whatsappNumber, productName, size);
+  const productUrl =
+    slug && typeof window !== "undefined"
+      ? `${window.location.origin}/forma/${slug}`
+      : undefined;
+  const url = buildWhatsAppUrl(whatsappNumber, productName, size, productUrl);
   window.open(url, "_blank", "noopener,noreferrer");
 }

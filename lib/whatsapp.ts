@@ -2,9 +2,11 @@
 
 export function buildWhatsAppMessage(
   productName: string,
-  size: string
+  size: string,
+  productUrl?: string
 ): string {
-  return `Salam! Formaza11 saytından yazıram. "${productName}" (${size} ölçü) — qiymət və sifariş haqqında məlumat almaq istəyirəm.`;
+  const base = `Salam! Formaza11 saytından yazıram. "${productName}" (${size} ölçü) — qiymət və sifariş haqqında məlumat almaq istəyirəm.`;
+  return productUrl ? `${base}\n${productUrl}` : base;
 }
 
 export function normalizePhone(raw: string): string {
@@ -14,10 +16,13 @@ export function normalizePhone(raw: string): string {
 export function buildWhatsAppUrl(
   rawNumber: string,
   productName: string,
-  size: string
+  size: string,
+  productUrl?: string
 ): string {
   const number = normalizePhone(rawNumber);
-  const text = encodeURIComponent(buildWhatsAppMessage(productName, size));
+  const text = encodeURIComponent(
+    buildWhatsAppMessage(productName, size, productUrl)
+  );
   return `https://wa.me/${number}?text=${text}`;
 }
 

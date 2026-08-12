@@ -4,6 +4,7 @@ import { Hero } from "@/components/home/hero";
 import { Marquee } from "@/components/site/marquee";
 import { TrustStrip } from "@/components/home/trust-strip";
 import { TeamsMarquee } from "@/components/home/teams-marquee";
+import { PitchShowcase } from "@/components/home/pitch-showcase";
 import { CtaBand } from "@/components/site/cta-band";
 import { SectionHeading } from "@/components/home/section-heading";
 import { CategoryGrid } from "@/components/home/category-grid";
@@ -85,6 +86,7 @@ export default async function HomePage() {
         <TeamsMarquee />
 
         <HowTo />
+        <PitchShowcase />
         <SizeGuide />
         <Faq />
         <CtaBand whatsappNumber={settings.whatsappNumber} />

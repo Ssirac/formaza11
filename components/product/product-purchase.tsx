@@ -62,6 +62,7 @@ export function ProductPurchase({
       productName,
       size: selected ?? "—",
       whatsappNumber,
+      slug,
     });
   }
 
