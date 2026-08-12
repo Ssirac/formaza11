@@ -3,7 +3,9 @@ import { Sparkles } from "lucide-react";
 import { Hero } from "@/components/home/hero";
 import { Marquee } from "@/components/site/marquee";
 import { TrustStrip } from "@/components/home/trust-strip";
+import { Suspense } from "react";
 import { TeamsMarquee } from "@/components/home/teams-marquee";
+import { FootballScores } from "@/components/home/football-scores";
 import { PitchShowcase } from "@/components/home/pitch-showcase";
 import { CtaBand } from "@/components/site/cta-band";
 import { SectionHeading } from "@/components/home/section-heading";
@@ -84,6 +86,10 @@ export default async function HomePage() {
         </section>
 
         <TeamsMarquee />
+
+        <Suspense fallback={null}>
+          <FootballScores />
+        </Suspense>
 
         <HowTo />
         <PitchShowcase />

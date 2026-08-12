@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Kanit, Manrope } from "next/font/google";
+import { Archivo, Manrope } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const kanit = Kanit({
+const archivo = Archivo({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800", "900"],
+  weight: ["600", "700", "800", "900"],
   style: ["normal", "italic"],
-  variable: "--font-kanit",
+  variable: "--font-archivo",
   display: "swap",
 });
 
@@ -63,7 +63,7 @@ export default function RootLayout({
   return (
     <html
       lang="az"
-      className={`${kanit.variable} ${manrope.variable} h-full antialiased`}
+      className={`${archivo.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-ink text-cream">
         <script
