@@ -18,6 +18,43 @@ function fileToDataUri(file: File): Promise<string> {
   });
 }
 
+/**
+ * Downscale + re-encode an image in the browser before upload. Keeps payloads
+ * small (well under Server Action body limits) and Cloudinary storage light.
+ */
+async function compressImage(
+  file: File,
+  maxDim = 1400,
+  quality = 0.82
+): Promise<string> {
+  const dataUrl = await fileToDataUri(file);
+  // SVGs and tiny files: skip canvas re-encode.
+  if (file.type === "image/svg+xml") return dataUrl;
+  try {
+    const img = document.createElement("img");
+    await new Promise<void>((res, rej) => {
+      img.onload = () => res();
+      img.onerror = () => rej(new Error("load"));
+      img.src = dataUrl;
+    });
+    let { width, height } = img;
+    if (Math.max(width, height) > maxDim) {
+      const scale = maxDim / Math.max(width, height);
+      width = Math.round(width * scale);
+      height = Math.round(height * scale);
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return dataUrl;
+    ctx.drawImage(img, 0, 0, width, height);
+    return canvas.toDataURL("image/jpeg", quality);
+  } catch {
+    return dataUrl;
+  }
+}
+
 export function ImageManager({
   value,
   onChange,
@@ -53,7 +90,7 @@ export function ImageManager({
     setUploading((n) => n + arr.length);
     for (const file of arr) {
       try {
-        const dataUri = await fileToDataUri(file);
+        const dataUri = await compressImage(file);
         const res = await uploadProductImage(dataUri);
         if (res.ok && res.url) {
           onChange([...value, res.url]);
