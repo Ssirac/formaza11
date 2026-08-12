@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import { AnnouncementBar } from "@/components/site/announcement-bar";
+import { StoreProvider } from "@/components/store/store";
 import { getSettings } from "@/lib/queries";
 
 export default async function SiteLayout({
@@ -10,7 +11,7 @@ export default async function SiteLayout({
 }) {
   const s = await getSettings();
   return (
-    <>
+    <StoreProvider whatsappNumber={s.whatsappNumber}>
       <div
         className="pointer-events-none fixed inset-0 z-[1] bg-noise opacity-[0.04] mix-blend-soft-light"
         aria-hidden
@@ -23,6 +24,6 @@ export default async function SiteLayout({
         instagramUrl={s.instagramUrl}
         tiktokUrl={s.tiktokUrl}
       />
-    </>
+    </StoreProvider>
   );
 }

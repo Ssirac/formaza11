@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { BadgeMark } from "@/components/ui/logo";
 import { buttonClasses } from "@/components/ui/button";
+import { ShaderAnimation } from "@/components/ui/shader-lines";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -19,16 +20,23 @@ export function Hero({ title, subtitle }: { title: string; subtitle: string }) {
 
   return (
     <section className="relative flex min-h-[92vh] items-center overflow-hidden">
-      <div className="spotlight pointer-events-none absolute inset-0" aria-hidden />
-      <div className="pitch-lines pointer-events-none absolute inset-0 opacity-60" aria-hidden />
+      {/* Animated gold shader backdrop */}
+      <ShaderAnimation className="opacity-[0.5]" />
+      {/* Contrast overlays so the typography stays legible */}
       <div
-        className="pointer-events-none absolute -right-40 top-1/2 hidden h-[38rem] w-[38rem] -translate-y-1/2 rounded-full opacity-30 blur-3xl lg:block"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/70 to-ink"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle, rgba(227,178,60,0.35) 0%, transparent 65%)",
+            "radial-gradient(65% 55% at 50% 42%, transparent 0%, rgba(8,8,10,0.55) 100%)",
         }}
         aria-hidden
       />
+      <div className="spotlight pointer-events-none absolute inset-0" aria-hidden />
+      <div className="pitch-lines pointer-events-none absolute inset-0 opacity-25" aria-hidden />
 
       <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:px-8">
         <div>

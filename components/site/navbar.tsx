@@ -7,6 +7,7 @@ import { Logo } from "@/components/ui/logo";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { buildContactUrl } from "@/lib/whatsapp";
 import { buttonClasses } from "@/components/ui/button";
+import { StoreButtons } from "@/components/store/store-buttons";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
@@ -58,27 +59,28 @@ export function Navbar({ whatsappNumber }: { whatsappNumber: string }) {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="flex items-center gap-2">
+          <StoreButtons />
           <a
             href={contact}
             target="_blank"
             rel="noopener noreferrer"
-            className={buttonClasses("gold", "sm")}
+            className={buttonClasses("gold", "sm", "hidden md:inline-flex")}
           >
             <WhatsAppIcon className="h-4 w-4" />
             Əlaqə
           </a>
-        </div>
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-line text-cream md:hidden"
-          aria-label="Menyu"
-          aria-expanded={open}
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-line text-cream md:hidden"
+            aria-label="Menyu"
+            aria-expanded={open}
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {open && (

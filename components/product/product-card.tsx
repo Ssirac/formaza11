@@ -10,6 +10,7 @@ import { SizeChips } from "./size-chips";
 import { trackAndOpen } from "./order-util";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { buttonClasses } from "@/components/ui/button";
+import { FavoriteButton } from "@/components/store/favorite-button";
 import { cn } from "@/lib/utils";
 
 export function ProductCard({
@@ -117,11 +118,22 @@ export function ProductCard({
           {product.categoryName}
         </span>
         {product.isFeatured && (
-          <span className="absolute right-3 top-3 rounded-full bg-metal-gold px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-ink">
+          <span className="absolute bottom-3 left-3 rounded-full bg-metal-gold px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-ink">
             Seçilmiş
           </span>
         )}
       </Link>
+
+      <FavoriteButton
+        item={{
+          id: product.id,
+          slug: product.slug,
+          name: product.name,
+          image: product.images[0],
+          categoryName: product.categoryName,
+        }}
+        className="absolute right-3 top-3 z-20"
+      />
 
       <div className="flex flex-1 flex-col gap-3 p-4">
         <Link href={`/forma/${product.slug}`} className="min-w-0">

@@ -87,7 +87,9 @@ export default async function ProductPage({ params }: { params: Params }) {
           <div className="mt-8 border-t border-line pt-8">
             <ProductPurchase
               productId={product.id}
+              slug={product.slug}
               productName={product.name}
+              image={product.images[0]}
               sizes={product.sizes}
               whatsappNumber={settings.whatsappNumber}
             />

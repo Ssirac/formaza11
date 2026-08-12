@@ -1,36 +1,62 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
+import { Minus, Plus } from "lucide-react";
 import { SizeChips } from "./size-chips";
 import { trackAndOpen } from "./order-util";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { buttonClasses } from "@/components/ui/button";
+import { FavoriteButton } from "@/components/store/favorite-button";
+import { useCart, useStoreUI } from "@/components/store/store";
 
 export function ProductPurchase({
   productId,
+  slug,
   productName,
+  image,
   sizes,
   whatsappNumber,
 }: {
   productId: string;
+  slug: string;
   productName: string;
+  image?: string;
   sizes: string[];
   whatsappNumber: string;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [qty, setQty] = useState(1);
   const [shake, setShake] = useState(false);
   const [tip, setTip] = useState(false);
 
+  const { add } = useCart();
+  const { openCart } = useStoreUI();
   const hasSizes = sizes.length > 0;
 
-  function order() {
+  function requireSize(): boolean {
     if (hasSizes && !selected) {
       setShake(true);
       setTip(true);
       setTimeout(() => setShake(false), 500);
       setTimeout(() => setTip(false), 2200);
-      return;
+      return false;
     }
+    return true;
+  }
+
+  function addToCart() {
+    if (!requireSize()) return;
+    add(
+      { id: productId, slug, name: productName, image, size: selected ?? "—" },
+      qty
+    );
+    toast.success("Səbətə əlavə olundu");
+    openCart();
+  }
+
+  function orderNow() {
+    if (!requireSize()) return;
     trackAndOpen({
       productId,
       productName,
@@ -41,14 +67,11 @@ export function ProductPurchase({
 
   return (
     <>
-      {/* Inline selector + CTA */}
       <div className="space-y-5">
         {hasSizes ? (
           <div>
             <div className="mb-3 flex items-center justify-between">
-              <span className="text-sm font-semibold text-cream">
-                Ölçü seç
-              </span>
+              <span className="text-sm font-semibold text-cream">Ölçü seç</span>
               {selected && (
                 <span className="text-sm text-gold">Seçilmiş: {selected}</span>
               )}
@@ -66,7 +89,33 @@ export function ProductPurchase({
           </p>
         )}
 
-        <div className="relative">
+        {/* Quantity */}
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-semibold text-cream">Say</span>
+          <div className="flex items-center gap-1 rounded-lg border border-line-strong">
+            <button
+              type="button"
+              onClick={() => setQty((q) => Math.max(1, q - 1))}
+              className="grid h-10 w-10 place-items-center text-muted hover:text-cream"
+              aria-label="Azalt"
+            >
+              <Minus className="h-4 w-4" />
+            </button>
+            <span className="min-w-8 text-center font-semibold text-cream">
+              {qty}
+            </span>
+            <button
+              type="button"
+              onClick={() => setQty((q) => q + 1)}
+              className="grid h-10 w-10 place-items-center text-muted hover:text-cream"
+              aria-label="Artır"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="relative space-y-3">
           {tip && (
             <span className="absolute -top-9 left-0 rounded-md bg-gold px-3 py-1.5 text-sm font-semibold text-ink shadow-lg">
               Əvvəlcə ölçünü seç
@@ -74,34 +123,46 @@ export function ProductPurchase({
           )}
           <button
             type="button"
-            onClick={order}
+            onClick={addToCart}
             className={buttonClasses("gold", "lg", "w-full")}
           >
-            <WhatsAppIcon className="h-5 w-5" />
-            WhatsApp-da soruş
+            Səbətə at
           </button>
-          <p className="mt-3 text-center text-xs text-faint">
-            Qiymət və sifariş detalları WhatsApp-da bildirilir.
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={orderNow}
+              className={buttonClasses("outline", "md", "flex-1")}
+            >
+              <WhatsAppIcon className="h-4 w-4" />
+              WhatsApp-da soruş
+            </button>
+            <FavoriteButton
+              variant="solid"
+              item={{ id: productId, slug, name: productName, image }}
+            />
+          </div>
+          <p className="text-center text-xs text-faint">
+            Qiymət və çatdırılma WhatsApp-da bildirilir.
           </p>
         </div>
       </div>
 
-      {/* Sticky mobile CTA bar */}
+      {/* Sticky mobile bar */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-ink/95 px-4 py-3 backdrop-blur-xl lg:hidden">
         <div className="flex items-center gap-3">
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs text-faint">{productName}</p>
             <p className="text-sm font-semibold text-cream">
-              {selected ? `Ölçü: ${selected}` : "Ölçü seçilməyib"}
+              {selected ? `Ölçü: ${selected} · ${qty} ədəd` : "Ölçü seçilməyib"}
             </p>
           </div>
           <button
             type="button"
-            onClick={order}
+            onClick={addToCart}
             className={buttonClasses("gold", "md", "shrink-0")}
           >
-            <WhatsAppIcon className="h-4 w-4" />
-            Soruş
+            Səbətə at
           </button>
         </div>
       </div>

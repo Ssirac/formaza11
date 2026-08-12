@@ -1,4 +1,4 @@
-import { Truck, ShieldCheck, RefreshCw, Headset } from "lucide-react";
+import { Truck, ShieldCheck, Headset } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 const ITEMS: { icon: LucideIcon; title: string; text: string }[] = [
@@ -13,11 +13,6 @@ const ITEMS: { icon: LucideIcon; title: string; text: string }[] = [
     text: "Səliqəli tikiş və emblemlər",
   },
   {
-    icon: RefreshCw,
-    title: "Dəyişdirmə imkanı",
-    text: "Ölçü uyğun gəlməsə həll edirik",
-  },
-  {
     icon: Headset,
     title: "Canlı WhatsApp dəstəyi",
     text: "Sualına dərhal cavab veririk",
@@ -27,7 +22,7 @@ const ITEMS: { icon: LucideIcon; title: string; text: string }[] = [
 export function TrustStrip() {
   return (
     <section className="border-y border-line bg-surface/40">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px overflow-hidden px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-px overflow-hidden px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
         {ITEMS.map((it, i) => (
           <div
             key={i}
