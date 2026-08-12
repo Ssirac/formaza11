@@ -3,6 +3,7 @@ import { Sparkles } from "lucide-react";
 import { Hero } from "@/components/home/hero";
 import { Marquee } from "@/components/site/marquee";
 import { TrustStrip } from "@/components/home/trust-strip";
+import { TeamsMarquee } from "@/components/home/teams-marquee";
 import { CtaBand } from "@/components/site/cta-band";
 import { SectionHeading } from "@/components/home/section-heading";
 import { CategoryGrid } from "@/components/home/category-grid";
@@ -80,6 +81,8 @@ export default async function HomePage() {
             <CategoryGrid categories={categories} />
           </div>
         </section>
+
+        <TeamsMarquee />
 
         <HowTo />
         <SizeGuide />

@@ -9,7 +9,6 @@ const CATEGORIES = [
   { name: "Klublar", slug: "klublar", order: 1 },
   { name: "Milli komandalar", slug: "milli-komandalar", order: 2 },
   { name: "Retro", slug: "retro", order: 3 },
-  { name: "Uşaq dəstləri", slug: "usaq-destleri", order: 4 },
 ];
 
 const SETTINGS: Record<string, string> = {
