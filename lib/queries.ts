@@ -75,13 +75,19 @@ export async function getFeaturedProducts(limit = 8): Promise<ProductDTO[]> {
 export async function getVisibleProducts(opts?: {
   categorySlug?: string;
   q?: string;
+  size?: string;
 }): Promise<ProductDTO[]> {
   try {
     const where: any = { isHidden: false };
     if (opts?.categorySlug) where.category = { slug: opts.categorySlug };
     if (opts?.q && opts.q.trim()) {
-      where.name = { contains: opts.q.trim(), mode: "insensitive" };
+      const term = opts.q.trim();
+      where.OR = [
+        { name: { contains: term, mode: "insensitive" } },
+        { description: { contains: term, mode: "insensitive" } },
+      ];
     }
+    if (opts?.size) where.sizes = { array_contains: opts.size };
     const products = await prisma.product.findMany({
       where,
       include: { category: true },

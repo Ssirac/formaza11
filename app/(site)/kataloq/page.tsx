@@ -7,6 +7,7 @@ import {
   getSettings,
 } from "@/lib/queries";
 import { FilterChips } from "@/components/catalog/filter-chips";
+import { SizeFilter } from "@/components/catalog/size-filter";
 import { CatalogSearch } from "@/components/catalog/catalog-search";
 import { CatalogSkeleton } from "@/components/catalog/catalog-skeleton";
 import { ProductGrid } from "@/components/product/product-grid";
@@ -24,13 +25,15 @@ type SP = Record<string, string | string[] | undefined>;
 async function Results({
   categorySlug,
   q,
+  size,
   whatsappNumber,
 }: {
   categorySlug?: string;
   q?: string;
+  size?: string;
   whatsappNumber: string;
 }) {
-  const products = await getVisibleProducts({ categorySlug, q });
+  const products = await getVisibleProducts({ categorySlug, q, size });
 
   if (products.length === 0) {
     return (
@@ -62,13 +65,14 @@ export default async function CatalogPage({
   const categorySlug =
     typeof sp.kateqoriya === "string" ? sp.kateqoriya : undefined;
   const q = typeof sp.axtar === "string" ? sp.axtar : undefined;
+  const size = typeof sp.olcu === "string" ? sp.olcu : undefined;
 
   const [categories, settings] = await Promise.all([
     getCategories(),
     getSettings(),
   ]);
 
-  const key = `${categorySlug ?? ""}|${q ?? ""}`;
+  const key = `${categorySlug ?? ""}|${q ?? ""}|${size ?? ""}`;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -82,9 +86,12 @@ export default async function CatalogPage({
         </h1>
       </header>
 
-      <div className="mt-8 flex flex-col gap-4 border-b border-line pb-6 sm:flex-row sm:items-center sm:justify-between">
-        <FilterChips categories={categories} active={categorySlug} q={q} />
-        <CatalogSearch />
+      <div className="mt-8 space-y-4 border-b border-line pb-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <FilterChips categories={categories} active={categorySlug} q={q} />
+          <CatalogSearch />
+        </div>
+        <SizeFilter />
       </div>
 
       <div className="mt-10">
@@ -92,6 +99,7 @@ export default async function CatalogPage({
           <Results
             categorySlug={categorySlug}
             q={q}
+            size={size}
             whatsappNumber={settings.whatsappNumber}
           />
         </Suspense>
