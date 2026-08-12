@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { UploadCloud, Link2, X, LoaderCircle, Star } from "lucide-react";
-import { uploadProductImage } from "@/lib/actions/products";
 import { inputClass } from "@/components/ui/field";
 import { buttonClasses } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -86,16 +85,36 @@ export function ImageManager({
 
   async function handleFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
+
+    const cloud = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    if (!cloud || !preset) {
+      toast.error(
+        "Fayl yükləmə üçün Cloudinary qurulmayıb. Şəkil URL-i yapışdırın."
+      );
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
+
     const arr = Array.from(files);
     setUploading((n) => n + arr.length);
+    const uploaded: string[] = [];
+
     for (const file of arr) {
       try {
         const dataUri = await compressImage(file);
-        const res = await uploadProductImage(dataUri);
-        if (res.ok && res.url) {
-          onChange([...value, res.url]);
+        const form = new FormData();
+        form.append("file", dataUri);
+        form.append("upload_preset", preset);
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloud}/image/upload`,
+          { method: "POST", body: form }
+        );
+        const json = await res.json();
+        if (res.ok && json.secure_url) {
+          uploaded.push(json.secure_url as string);
         } else {
-          toast.error(res.error ?? "Yüklənmədi");
+          toast.error(json?.error?.message ?? "Yüklənmədi");
         }
       } catch {
         toast.error("Yükləmə xətası");
@@ -103,6 +122,8 @@ export function ImageManager({
         setUploading((n) => n - 1);
       }
     }
+
+    if (uploaded.length) onChange([...value, ...uploaded]);
     if (fileRef.current) fileRef.current.value = "";
   }
 
