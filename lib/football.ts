@@ -59,10 +59,10 @@ function extractTag(block: string, tag: string): string {
 // date and source, linking out to the original article (aggregation only).
 export async function getFootballNews(limit = 8): Promise<NewsItem[]> {
   try {
-    const res = await fetch(
-      "https://feeds.bbci.co.uk/sport/football/rss.xml",
-      { next: { revalidate: 1800 } }
-    );
+    const res = await fetch("https://apasport.az/rss", {
+      next: { revalidate: 1800 },
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
     if (!res.ok) return [];
     const xml = await res.text();
     const items: NewsItem[] = [];
@@ -73,7 +73,8 @@ export async function getFootballNews(limit = 8): Promise<NewsItem[]> {
       const title = extractTag(block, "title");
       const link = extractTag(block, "link");
       const date = extractTag(block, "pubDate");
-      if (title && link) items.push({ title, link, date, source: "BBC Sport" });
+      if (title && link)
+        items.push({ title, link, date, source: "Apasport.az" });
     }
     return items;
   } catch {
