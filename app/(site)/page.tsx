@@ -8,6 +8,7 @@ import { TeamsMarquee } from "@/components/home/teams-marquee";
 import { FootballScores } from "@/components/home/football-scores";
 import { CorridorHero } from "@/components/home/corridor-hero";
 import { FeaturedCarousel } from "@/components/home/featured-carousel";
+import { VideoShowcase } from "@/components/home/video-showcase";
 import { CtaBand } from "@/components/site/cta-band";
 import { SectionHeading } from "@/components/home/section-heading";
 import { CategoryGrid } from "@/components/home/category-grid";
@@ -99,6 +100,8 @@ export default async function HomePage() {
             <CategoryGrid categories={categories} />
           </div>
         </section>
+
+        <VideoShowcase />
 
         {mostViewed.length > 0 && (
           <section>
