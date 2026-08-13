@@ -34,12 +34,6 @@ export function VideoShowcase() {
           <span className="h-1.5 w-1.5 rounded-full bg-gold" />
           FORMAZA11
         </span>
-        <h2 className="max-w-2xl font-display text-3xl font-black italic uppercase leading-[0.95] tracking-tight text-metal-gold drop-shadow-2xl sm:text-5xl">
-          Formanı gey, oyunu yaşa
-        </h2>
-        <p className="max-w-md text-sm text-cream/85 sm:text-base">
-          Klub, milli komanda və retro formalar — hər tikişi orijinala sadiq.
-        </p>
         <Link href="/kataloq" className={buttonClasses("gold", "lg", "mt-2")}>
           Kataloqa bax
           <ArrowRight className="h-5 w-5" />
