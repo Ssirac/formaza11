@@ -114,11 +114,13 @@ export async function getRecentClicks(limit = 8): Promise<RecentClick[]> {
   }
 }
 
+export type AdminProductListItem = ProductDTO & { pricing: ProductPricing };
+
 export async function getAdminProducts(opts?: {
   q?: string;
   categoryId?: string;
   hidden?: "all" | "visible" | "hidden";
-}): Promise<ProductDTO[]> {
+}): Promise<AdminProductListItem[]> {
   try {
     const where: any = {};
     if (opts?.q?.trim())
@@ -132,7 +134,14 @@ export async function getAdminProducts(opts?: {
       include: { category: true, _count: { select: { clicks: true } } },
       orderBy: [{ createdAt: "desc" }],
     });
-    return products.map(toProductDTO);
+    return products.map((p) => ({
+      ...toProductDTO(p),
+      pricing: {
+        costPrice: (p as any).costPrice ?? null,
+        shippingCost: (p as any).shippingCost ?? null,
+        salePrice: (p as any).salePrice ?? null,
+      },
+    }));
   } catch {
     return [];
   }

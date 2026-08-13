@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Pencil, Trash2, Shirt, MousePointerClick } from "lucide-react";
-import type { ProductDTO } from "@/lib/types";
+import type { AdminProductListItem } from "@/lib/admin-data";
 import {
   setProductHidden,
   setProductFeatured,
@@ -16,9 +16,9 @@ import { Switch } from "./switch";
 import { ConfirmDialog } from "./confirm-dialog";
 import { cn } from "@/lib/utils";
 
-export function ProductTable({ products }: { products: ProductDTO[] }) {
+export function ProductTable({ products }: { products: AdminProductListItem[] }) {
   const router = useRouter();
-  const [target, setTarget] = useState<ProductDTO | null>(null);
+  const [target, setTarget] = useState<AdminProductListItem | null>(null);
   const [deleting, startDelete] = useTransition();
 
   if (products.length === 0) {
@@ -54,12 +54,13 @@ export function ProductTable({ products }: { products: ProductDTO[] }) {
     <>
       <div className="overflow-hidden rounded-2xl border border-line bg-surface">
         {/* header (desktop) */}
-        <div className="hidden grid-cols-[1fr_120px_90px_90px_70px_90px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
+        <div className="hidden grid-cols-[1fr_110px_84px_84px_56px_112px_88px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
           <span>Məhsul</span>
           <span>Kateqoriya</span>
           <span className="text-center">Seçilmiş</span>
           <span className="text-center">Gizli</span>
           <span className="text-center">Klik</span>
+          <span className="text-right">Qiymət (₼)</span>
           <span className="text-right">Əməliyyat</span>
         </div>
 
@@ -86,13 +87,17 @@ function ProductRow({
   product,
   onDelete,
 }: {
-  product: ProductDTO;
+  product: AdminProductListItem;
   onDelete: () => void;
 }) {
   const router = useRouter();
   const [featured, setFeatured] = useState(product.isFeatured);
   const [hidden, setHidden] = useState(product.isHidden);
   const [busy, setBusy] = useState(false);
+
+  const { costPrice, shippingCost, salePrice } = product.pricing;
+  const profit =
+    salePrice != null ? salePrice - (costPrice ?? 0) - (shippingCost ?? 0) : null;
 
   async function toggleFeatured(v: boolean) {
     setFeatured(v);
@@ -123,7 +128,7 @@ function ProductRow({
   }
 
   return (
-    <li className="grid grid-cols-1 gap-4 px-5 py-4 lg:grid-cols-[1fr_120px_90px_90px_70px_90px] lg:items-center">
+    <li className="grid grid-cols-1 gap-4 px-5 py-4 lg:grid-cols-[1fr_110px_84px_84px_56px_112px_88px] lg:items-center">
       {/* product */}
       <div className="flex items-center gap-3">
         <div className="relative h-14 w-11 shrink-0 overflow-hidden rounded-lg border border-line bg-ink-2">
@@ -188,6 +193,29 @@ function ProductRow({
         <span className={cn(product.clickCount > 0 && "text-gold")}>
           {product.clickCount}
         </span>
+      </div>
+
+      {/* price (admin-only) */}
+      <div className="flex items-baseline gap-2 text-sm lg:flex-col lg:items-end lg:gap-0.5">
+        <span className="text-xs text-muted lg:hidden">Qiymət:</span>
+        {salePrice != null ? (
+          <>
+            <span className="font-semibold text-cream">{salePrice} ₼</span>
+            {profit != null && (
+              <span
+                className={cn(
+                  "text-xs font-medium",
+                  profit >= 0 ? "text-pitch" : "text-red-400"
+                )}
+              >
+                {profit >= 0 ? "+" : ""}
+                {Number.isInteger(profit) ? profit : profit.toFixed(2)} ₼
+              </span>
+            )}
+          </>
+        ) : (
+          <span className="text-faint">—</span>
+        )}
       </div>
 
       {/* actions */}
