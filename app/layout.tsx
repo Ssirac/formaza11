@@ -49,10 +49,9 @@ export const metadata: Metadata = {
     title: "FORMAZA11 — Futbol formaları",
     description: "Premium futbol formaları. WhatsApp ilə sifariş.",
   },
-  icons: {
-    icon: "/brand/formaza11-badge.png",
-    apple: "/brand/formaza11-badge.png",
-  },
+  // Favicon/apple-icon come from app/icon.png & app/apple-icon.png (file
+  // convention) so Next hashes their URLs — the browser refetches whenever
+  // the logo content changes, instead of serving a stale cached icon.
 };
 
 export default function RootLayout({
