@@ -68,8 +68,10 @@ export default async function ProductPage({ params }: { params: Params }) {
         <span className="truncate text-muted">{product.name}</span>
       </nav>
 
-      <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-14">
-        <ProductGallery images={product.images} alt={product.name} />
+      <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[0.82fr_1fr] lg:items-start lg:gap-14">
+        <div className="mx-auto w-full max-w-md lg:mx-0">
+          <ProductGallery images={product.images} alt={product.name} />
+        </div>
 
         <div className="lg:py-4">
           <div className="flex flex-wrap items-center gap-2">

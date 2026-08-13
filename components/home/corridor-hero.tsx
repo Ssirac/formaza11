@@ -24,7 +24,7 @@ export function CorridorHero({
       <ImageStreamHero
         images={images.map((src) => ({ src }))}
         speed={20}
-        className="min-h-[92vh] bg-[#08080a] text-cream"
+        className="min-h-[92vh] bg-[#070b1a] text-cream"
       >
         <div
           className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black"

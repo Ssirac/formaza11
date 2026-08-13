@@ -68,9 +68,9 @@ export function ShaderAnimation({ className }: { className?: string }) {
           }
           float glow = g0 + g1 + g2;
 
-          // Gold palette (matches FORMAZA11 tokens)
-          vec3 deep   = vec3(0.72, 0.52, 0.17);
-          vec3 bright = vec3(1.00, 0.90, 0.60);
+          // Blue palette (matches FORMAZA11 logo)
+          vec3 deep   = vec3(0.05, 0.18, 0.55);
+          vec3 bright = vec3(0.42, 0.65, 1.00);
           vec3 color = mix(deep, bright, clamp(g2, 0.0, 1.0)) * glow;
 
           gl_FragColor = vec4(color, 1.0);

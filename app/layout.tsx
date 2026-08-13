@@ -69,7 +69,7 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "(function(){try{if(localStorage.getItem('formaza11-theme')==='light')document.documentElement.classList.add('light');}catch(e){}})();",
+              "(function(){try{if(localStorage.getItem('formaza11-theme')!=='dark')document.documentElement.classList.add('light');}catch(e){document.documentElement.classList.add('light');}})();",
           }}
         />
         {children}

@@ -7,14 +7,13 @@ import { Suspense } from "react";
 import { TeamsMarquee } from "@/components/home/teams-marquee";
 import { FootballScores } from "@/components/home/football-scores";
 import { CorridorHero } from "@/components/home/corridor-hero";
-import { PitchShowcase } from "@/components/home/pitch-showcase";
+import { FeaturedCarousel } from "@/components/home/featured-carousel";
 import { CtaBand } from "@/components/site/cta-band";
 import { SectionHeading } from "@/components/home/section-heading";
 import { CategoryGrid } from "@/components/home/category-grid";
 import { HowTo } from "@/components/home/how-to";
 import { SizeGuide } from "@/components/home/size-guide";
 import { Faq } from "@/components/home/faq";
-import { ProductGrid } from "@/components/product/product-grid";
 import { buttonClasses } from "@/components/ui/button";
 import {
   getSettings,
@@ -38,7 +37,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {heroImages.length >= 6 ? (
+      {heroImages.length >= 1 ? (
         <CorridorHero
           title={settings.heroTitle}
           subtitle={settings.heroSubtitle}
@@ -60,10 +59,7 @@ export default async function HomePage() {
           />
           <div className="mt-12">
             {featured.length > 0 ? (
-              <ProductGrid
-                products={featured}
-                whatsappNumber={settings.whatsappNumber}
-              />
+              <FeaturedCarousel products={featured} />
             ) : (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line-strong bg-surface/50 px-6 py-16 text-center">
                 <span className="grid h-14 w-14 place-items-center rounded-2xl border border-gold/30 bg-ink-2 text-gold">
@@ -106,7 +102,6 @@ export default async function HomePage() {
         </Suspense>
 
         <HowTo />
-        <PitchShowcase />
         <SizeGuide />
         <Faq />
         <CtaBand whatsappNumber={settings.whatsappNumber} />

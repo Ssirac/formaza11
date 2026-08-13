@@ -57,7 +57,7 @@ export const HOW_TO_STEPS = [
   },
   {
     n: "03",
-    title: "15–20 günə əlində",
+    title: "Qısa zamanda əlində",
     text: "Sifarişi təsdiqlə, behi ödə — forman qısa zamanda ünvanına çatsın.",
   },
 ] as const;
@@ -76,7 +76,7 @@ export const SIZE_NOTE =
 export const FAQ_ITEMS = [
   {
     q: "Çatdırılma nə qədər çəkir?",
-    a: "Adətən sifariş təsdiqləndikdən sonra 15–20 iş günü ərzində əlinizdə olur. Dəqiq müddəti WhatsApp-da təsdiqləyirik.",
+    a: "Sifariş təsdiqləndikdən sonra formanı hazırlayıb ünvanına göndəririk. Təxmini müddəti WhatsApp-da təsdiqləyirik.",
   },
   {
     q: "Beh (avans) qaydası necədir?",
@@ -87,8 +87,8 @@ export const FAQ_ITEMS = [
     a: "Orijinal dizayna sadiq, nəfəs alan idman parçasından hazırlanmış premium formalar təqdim edirik. Tikişlər və emblemlər səliqəli işlənir.",
   },
   {
-    q: "Ölçü uyğun gəlməsə dəyişdirmək olar?",
-    a: "Bəli. Ölçü uyğun gəlmədikdə şərtlər daxilində dəyişdirmə mümkündür — bizimlə WhatsApp vasitəsilə əlaqə saxlayın.",
+    q: "Məhsulu qaytarmaq olar?",
+    a: "Formalar sifariş əsasında hazırlandığı üçün qaytarılma və geri ödəniş yoxdur. Ölçü seçimindən əmin deyilsənsə, sifarişdən əvvəl WhatsApp-da bizimlə məsləhətləş.",
   },
   {
     q: "Qiymətlər saytda niyə yoxdur?",

@@ -11,7 +11,7 @@ export function CtaBand({ whatsappNumber }: { whatsappNumber: string }) {
 
   return (
     <Reveal>
-      <section className="always-dark relative overflow-hidden rounded-3xl border border-gold/20 bg-[#0d0d10] text-cream">
+      <section className="always-dark relative overflow-hidden rounded-3xl border border-gold/20 bg-[#0b1224] text-cream">
         <div className="spotlight pointer-events-none absolute inset-0" aria-hidden />
         <div className="pitch-lines pointer-events-none absolute inset-0 opacity-50" aria-hidden />
         <div className="relative flex flex-col items-center gap-6 px-6 py-14 text-center sm:px-10">

@@ -20,10 +20,10 @@
   --color-muted: #9a9aa4;
   --color-faint: #6b6b74;
 
-  /* Gold (primary accent) */
-  --color-gold: #e3b23c;
-  --color-gold-bright: #f6dc8f;
-  --color-gold-deep: #b8842a;
+  /* Brand blue (primary accent) — matches the FORMAZA11 logo */
+  --color-gold: #3b82f6;
+  --color-gold-bright: #7da8ff;
+  --color-gold-deep: #1d4ed8;
 
   /* Silver (secondary metal) */
   --color-silver: #c8ccd2;
@@ -100,14 +100,14 @@
 
 /* ------------------------------------------------------------- utilities */
 @layer utilities {
-  /* Metallic gold text */
+  /* Metallic blue text */
   .text-metal-gold {
     background: linear-gradient(
       180deg,
-      #fbeeb8 0%,
-      #f6dc8f 22%,
-      #e3b23c 52%,
-      #b8842a 100%
+      #dbe8ff 0%,
+      #9cc0ff 22%,
+      #3b82f6 52%,
+      #1546b8 100%
     );
     -webkit-background-clip: text;
     background-clip: text;
@@ -125,13 +125,13 @@
   }
 
   .bg-metal-gold {
-    background: linear-gradient(135deg, #f6dc8f 0%, #e3b23c 45%, #b8842a 100%);
+    background: linear-gradient(135deg, #7da8ff 0%, #3b82f6 45%, #1d4ed8 100%);
   }
 
   /* Stadium-light glow */
   .glow-gold {
-    box-shadow: 0 0 0 1px rgba(227, 178, 60, 0.25),
-      0 8px 40px -8px rgba(227, 178, 60, 0.35);
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.25),
+      0 8px 40px -8px rgba(59, 130, 246, 0.4);
   }
 
   /* Pitch-line texture background */
@@ -149,8 +149,8 @@
   .spotlight {
     background: radial-gradient(
       60% 55% at 50% 0%,
-      rgba(227, 178, 60, 0.16) 0%,
-      rgba(227, 178, 60, 0.04) 35%,
+      rgba(59, 130, 246, 0.18) 0%,
+      rgba(59, 130, 246, 0.05) 35%,
       transparent 70%
     );
   }
@@ -188,7 +188,7 @@
     background: linear-gradient(
       115deg,
       transparent 30%,
-      rgba(246, 220, 143, 0.14) 48%,
+      rgba(157, 192, 255, 0.18) 48%,
       transparent 62%
     );
     transform: translateX(-120%);
@@ -200,26 +200,26 @@
 
   /* Hairline top accent used on premium cards */
   .edge-gold {
-    box-shadow: inset 0 1px 0 0 rgba(246, 220, 143, 0.12);
+    box-shadow: inset 0 1px 0 0 rgba(157, 192, 255, 0.16);
   }
 
-  /* Glossy metallic depth for primary gold CTAs (pearl technique, gold) */
+  /* Glossy metallic depth for primary blue CTAs (pearl technique) */
   .btn-gloss {
     box-shadow:
-      inset 0 2px 3px rgba(255, 255, 255, 0.6),
-      inset 0 -3px 6px rgba(120, 70, 12, 0.5),
-      0 10px 26px -8px rgba(227, 178, 60, 0.55);
+      inset 0 2px 3px rgba(255, 255, 255, 0.45),
+      inset 0 -3px 6px rgba(12, 40, 120, 0.5),
+      0 10px 26px -8px rgba(59, 130, 246, 0.55);
   }
   .btn-gloss:hover {
     box-shadow:
-      inset 0 2px 4px rgba(255, 255, 255, 0.75),
-      inset 0 -3px 7px rgba(120, 70, 12, 0.45),
-      0 14px 34px -6px rgba(227, 178, 60, 0.7);
+      inset 0 2px 4px rgba(255, 255, 255, 0.6),
+      inset 0 -3px 7px rgba(12, 40, 120, 0.45),
+      0 14px 34px -6px rgba(59, 130, 246, 0.7);
   }
   .btn-gloss:active {
     box-shadow:
-      inset 0 3px 6px rgba(120, 70, 12, 0.55),
-      inset 0 -1px 2px rgba(255, 255, 255, 0.45);
+      inset 0 3px 6px rgba(12, 40, 120, 0.55),
+      inset 0 -1px 2px rgba(255, 255, 255, 0.4);
   }
 }
 
@@ -263,14 +263,14 @@ html.light {
   --color-cream: #0c0d10;
   --color-muted: #55606e;
   --color-faint: #8b93a0;
-  --color-gold: #a9791f;
-  --color-gold-bright: #caa03a;
-  --color-gold-deep: #7c5416;
+  --color-gold: #2563eb;
+  --color-gold-bright: #3b82f6;
+  --color-gold-deep: #1e40af;
   color-scheme: light;
 }
 
 html.light .text-metal-gold {
-  background: linear-gradient(180deg, #b3831f 0%, #7c5416 100%);
+  background: linear-gradient(180deg, #2f6bef 0%, #12307a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -297,7 +297,7 @@ html.light .text-metal-silver {
   --color-surface-3: #1e1e25;
 }
 .always-dark .text-metal-gold {
-  background: linear-gradient(180deg, #fbeeb8 0%, #f6dc8f 22%, #e3b23c 52%, #b8842a 100%);
+  background: linear-gradient(180deg, #dbe8ff 0%, #9cc0ff 22%, #3b82f6 52%, #12307a 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

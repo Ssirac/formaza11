@@ -16,13 +16,13 @@ export function BadgeMark({ className }: { className?: string }) {
     >
       <defs>
         <linearGradient id="fmz-gold" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fbeeb8" />
-          <stop offset="0.5" stopColor="#e3b23c" />
-          <stop offset="1" stopColor="#b8842a" />
+          <stop offset="0" stopColor="#9cc0ff" />
+          <stop offset="0.5" stopColor="#3b82f6" />
+          <stop offset="1" stopColor="#12307a" />
         </linearGradient>
         <linearGradient id="fmz-silver" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ffffff" />
-          <stop offset="1" stopColor="#8a8f99" />
+          <stop offset="0" stopColor="#7da8ff" />
+          <stop offset="1" stopColor="#1d4ed8" />
         </linearGradient>
       </defs>
       <circle cx="50" cy="50" r="47" fill="#0b0b0d" />
@@ -80,7 +80,7 @@ export function Logo({
       {showText && (
         <span className="font-display text-xl font-extrabold italic tracking-tight leading-none">
           <span className="text-metal-gold">FORMAZA</span>
-          <span className="text-metal-silver">11</span>
+          <span className="text-gold">11</span>
         </span>
       )}
     </span>
