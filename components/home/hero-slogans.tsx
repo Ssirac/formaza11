@@ -23,7 +23,7 @@ export function HeroSlogans({ className }: { className?: string }) {
   useEffect(() => {
     const id = setInterval(
       () => setI((n) => (n + 1) % SLOGANS.length),
-      3000,
+      4000,
     );
     return () => clearInterval(id);
   }, []);
