@@ -6,7 +6,7 @@ import { TrustStrip } from "@/components/home/trust-strip";
 import { Suspense } from "react";
 import { TeamsMarquee } from "@/components/home/teams-marquee";
 import { FootballScores } from "@/components/home/football-scores";
-import { JerseyCorridor } from "@/components/home/jersey-corridor";
+import { CorridorHero } from "@/components/home/corridor-hero";
 import { PitchShowcase } from "@/components/home/pitch-showcase";
 import { CtaBand } from "@/components/site/cta-band";
 import { SectionHeading } from "@/components/home/section-heading";
@@ -27,13 +27,26 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const [settings, featured, categories] = await Promise.all([
     getSettings(),
-    getFeaturedProducts(8),
+    getFeaturedProducts(12),
     getCategories(),
   ]);
 
+  const heroImages = featured
+    .flatMap((p) => p.images)
+    .filter(Boolean)
+    .slice(0, 12);
+
   return (
     <>
-      <Hero title={settings.heroTitle} subtitle={settings.heroSubtitle} />
+      {heroImages.length >= 6 ? (
+        <CorridorHero
+          title={settings.heroTitle}
+          subtitle={settings.heroSubtitle}
+          images={heroImages}
+        />
+      ) : (
+        <Hero title={settings.heroTitle} subtitle={settings.heroSubtitle} />
+      )}
       <Marquee />
       <TrustStrip />
 
@@ -85,10 +98,6 @@ export default async function HomePage() {
             <CategoryGrid categories={categories} />
           </div>
         </section>
-
-        <Suspense fallback={null}>
-          <JerseyCorridor />
-        </Suspense>
 
         <TeamsMarquee />
 

@@ -63,6 +63,7 @@ export function ImageManager({
 }) {
   const [url, setUrl] = useState("");
   const [uploading, setUploading] = useState(0);
+  const [dragging, setDragging] = useState(false);
   const dragIndex = useRef<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -146,54 +147,71 @@ export function ImageManager({
 
   return (
     <div className="space-y-4">
-      {/* Upload + URL row */}
-      <div className="flex flex-col gap-3 sm:flex-row">
+      {/* Dropzone — click or drag files to upload */}
+      <div
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragging(true);
+        }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragging(false);
+          handleFiles(e.dataTransfer.files);
+        }}
+        onClick={() => fileRef.current?.click()}
+        className={cn(
+          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-4 py-7 text-center transition-colors",
+          dragging
+            ? "border-gold bg-gold/10"
+            : "border-line-strong bg-surface/50 hover:border-gold/50"
+        )}
+      >
+        {uploading > 0 ? (
+          <LoaderCircle className="h-6 w-6 animate-spin text-gold" />
+        ) : (
+          <UploadCloud className="h-6 w-6 text-gold" />
+        )}
+        <p className="text-sm font-semibold text-cream">
+          {uploading > 0
+            ? `Yüklənir (${uploading})…`
+            : "Şəkilləri bura sürüşdür, ya da seçmək üçün klik et"}
+        </p>
+        <p className="text-xs text-faint">PNG / JPG · çoxlu fayl mümkündür</p>
+      </div>
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className="hidden"
+        onChange={(e) => handleFiles(e.target.files)}
+      />
+
+      {/* URL paste */}
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Link2 className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-faint" />
+          <input
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addUrl();
+              }
+            }}
+            placeholder="Şəkil URL-i yapışdır…"
+            className={`${inputClass} pl-10`}
+          />
+        </div>
         <button
           type="button"
-          onClick={() => fileRef.current?.click()}
-          className={buttonClasses("outline", "md")}
-          disabled={uploading > 0}
+          onClick={addUrl}
+          className={buttonClasses("ghost", "md")}
         >
-          {uploading > 0 ? (
-            <LoaderCircle className="h-4 w-4 animate-spin" />
-          ) : (
-            <UploadCloud className="h-4 w-4" />
-          )}
-          {uploading > 0 ? `Yüklənir (${uploading})…` : "Şəkil yüklə"}
+          Əlavə et
         </button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept="image/*"
-          multiple
-          className="hidden"
-          onChange={(e) => handleFiles(e.target.files)}
-        />
-
-        <div className="flex flex-1 gap-2">
-          <div className="relative flex-1">
-            <Link2 className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-faint" />
-            <input
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  addUrl();
-                }
-              }}
-              placeholder="Şəkil URL-i yapışdır…"
-              className={`${inputClass} pl-10`}
-            />
-          </div>
-          <button
-            type="button"
-            onClick={addUrl}
-            className={buttonClasses("ghost", "md")}
-          >
-            Əlavə et
-          </button>
-        </div>
       </div>
 
       {/* Previews */}
