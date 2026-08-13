@@ -7,8 +7,14 @@ import {
   Plus,
   TrendingUp,
   AlertTriangle,
+  Wallet,
 } from "lucide-react";
-import { getAdminStats, getTopProducts, getRecentClicks } from "@/lib/admin-data";
+import {
+  getAdminStats,
+  getTopProducts,
+  getRecentClicks,
+  getPricingSummary,
+} from "@/lib/admin-data";
 import { PageHeader } from "@/components/admin/page-header";
 import { StatCard } from "@/components/admin/stat-card";
 import { buttonClasses } from "@/components/ui/button";
@@ -17,11 +23,17 @@ import { formatDate } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const [stats, top, recent] = await Promise.all([
+  const [stats, top, recent, pricing] = await Promise.all([
     getAdminStats(),
     getTopProducts(6),
     getRecentClicks(8),
+    getPricingSummary(),
   ]);
+
+  const money = (n: number) =>
+    `${Math.round(n)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₼`;
 
   return (
     <div>
@@ -59,6 +71,49 @@ export default async function DashboardPage() {
           value={stats.clicks7d}
           icon={MousePointerClick}
         />
+      </div>
+
+      {/* Maliyyə xülasəsi (yalnız admin) */}
+      <div className="mt-6 rounded-2xl border border-line bg-surface p-5">
+        <div className="flex items-center gap-2">
+          <Wallet className="h-4 w-4 text-gold" />
+          <h2 className="font-display text-base font-bold italic text-cream">
+            Maliyyə xülasəsi
+          </h2>
+          <span className="ml-auto text-xs text-faint">
+            {pricing.priced} qiymətli · {pricing.unpriced} qiymətsiz
+          </span>
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div className="rounded-xl border border-line bg-ink-2 px-4 py-3">
+            <p className="text-xs text-muted">Anbar dəyəri</p>
+            <p className="mt-1 font-display text-xl font-bold text-cream">
+              {money(pricing.inventoryCost)}
+            </p>
+          </div>
+          <div className="rounded-xl border border-line bg-ink-2 px-4 py-3">
+            <p className="text-xs text-muted">Potensial gəlir</p>
+            <p className="mt-1 font-display text-xl font-bold text-cream">
+              {money(pricing.potentialRevenue)}
+            </p>
+          </div>
+          <div className="rounded-xl border border-gold/30 bg-gold/10 px-4 py-3">
+            <p className="text-xs text-gold/80">Potensial mənfəət</p>
+            <p className="mt-1 font-display text-xl font-bold text-gold">
+              {money(pricing.potentialProfit)}
+            </p>
+          </div>
+          <div className="rounded-xl border border-line bg-ink-2 px-4 py-3">
+            <p className="text-xs text-muted">Orta marja</p>
+            <p className="mt-1 font-display text-xl font-bold text-cream">
+              {pricing.avgMarginPct}%
+            </p>
+          </div>
+        </div>
+        <p className="mt-3 text-xs text-faint">
+          Yalnız satış qiyməti təyin edilmiş məhsullar hesablanır. Bu rəqəmlər
+          yalnız admin paneldə görünür.
+        </p>
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-5">

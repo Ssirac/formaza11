@@ -114,6 +114,115 @@ export async function getRecentClicks(limit = 8): Promise<RecentClick[]> {
   }
 }
 
+export type PricingSummary = {
+  priced: number;
+  unpriced: number;
+  inventoryCost: number;
+  potentialRevenue: number;
+  potentialProfit: number;
+  avgMarginPct: number;
+};
+
+export async function getPricingSummary(): Promise<PricingSummary> {
+  try {
+    const rows = await prisma.product.findMany({
+      where: { isHidden: false },
+      select: { costPrice: true, shippingCost: true, salePrice: true },
+    });
+    let priced = 0;
+    let unpriced = 0;
+    let inventoryCost = 0;
+    let potentialRevenue = 0;
+    for (const r of rows as any[]) {
+      if (r.salePrice == null) {
+        unpriced++;
+        continue;
+      }
+      priced++;
+      inventoryCost += (r.costPrice ?? 0) + (r.shippingCost ?? 0);
+      potentialRevenue += r.salePrice;
+    }
+    const potentialProfit = potentialRevenue - inventoryCost;
+    const avgMarginPct =
+      potentialRevenue > 0
+        ? Math.round((potentialProfit / potentialRevenue) * 100)
+        : 0;
+    return {
+      priced,
+      unpriced,
+      inventoryCost,
+      potentialRevenue,
+      potentialProfit,
+      avgMarginPct,
+    };
+  } catch {
+    return {
+      priced: 0,
+      unpriced: 0,
+      inventoryCost: 0,
+      potentialRevenue: 0,
+      potentialProfit: 0,
+      avgMarginPct: 0,
+    };
+  }
+}
+
+export type Lead = {
+  id: string;
+  productId: string;
+  productName: string;
+  slug: string;
+  size: string;
+  salePrice: number | null;
+  createdAt: string;
+};
+
+export type PagedLeads = {
+  leads: Lead[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+};
+
+export async function getLeads(opts?: {
+  page?: number;
+  pageSize?: number;
+}): Promise<PagedLeads> {
+  const pageSize = Math.min(100, Math.max(1, Math.trunc(opts?.pageSize ?? 30)));
+  let page = Math.max(1, Math.trunc(opts?.page ?? 1));
+  try {
+    const total = await prisma.clickEvent.count();
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if (page > totalPages) page = totalPages;
+    const rows = await prisma.clickEvent.findMany({
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      include: {
+        product: { select: { name: true, slug: true, salePrice: true } },
+      },
+    });
+    return {
+      leads: rows.map((c) => ({
+        id: c.id,
+        productId: c.productId,
+        productName: c.product?.name ?? "—",
+        slug: c.product?.slug ?? "",
+        size: c.size,
+        salePrice: (c.product as any)?.salePrice ?? null,
+        createdAt: c.createdAt.toISOString(),
+      })),
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
+  } catch {
+    return { leads: [], total: 0, page, pageSize, totalPages: 1 };
+  }
+}
+
 export type AdminProductListItem = ProductDTO & { pricing: ProductPricing };
 
 export async function getAdminProducts(opts?: {

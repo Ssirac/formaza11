@@ -5,7 +5,7 @@ import { CLUB_CRESTS, NATION_CRESTS, type Crest } from "@/lib/club-logos";
 function Pill({ crest }: { crest: Crest }) {
   return (
     <Link
-      href={`/kataloq?axtar=${encodeURIComponent(crest.name)}`}
+      href={`/komanda/${crest.slug}`}
       aria-label={`${crest.name} formaları`}
       className="inline-flex shrink-0 items-center gap-2.5 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold text-cream transition-colors hover:border-gold hover:text-gold"
     >

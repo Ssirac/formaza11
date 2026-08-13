@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Menu,
   X,
+  Inbox,
 } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { logoutAction } from "@/lib/actions/auth";
@@ -20,6 +21,7 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { href: "/admin", label: "İdarə paneli", icon: LayoutDashboard, exact: true },
   { href: "/admin/mehsullar", label: "Məhsullar", icon: Shirt },
+  { href: "/admin/sifarisler", label: "Sifarişlər", icon: Inbox },
   { href: "/admin/kateqoriyalar", label: "Kateqoriyalar", icon: Tags },
   { href: "/admin/ayarlar", label: "Ayarlar", icon: Settings },
 ];

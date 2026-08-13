@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 
 type Params = Record<string, string | undefined>;
 
-function buildHref(params: Params, page: number): string {
+function buildHref(basePath: string, params: Params, page: number): string {
   const sp = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) if (v) sp.set(k, v);
   if (page > 1) sp.set("sehife", String(page));
   const qs = sp.toString();
-  return qs ? `/kataloq?${qs}` : "/kataloq";
+  return qs ? `${basePath}?${qs}` : basePath;
 }
 
 /** Compact page list: 1 … p-1 p p+1 … last */
@@ -31,10 +31,12 @@ export function Pagination({
   page,
   totalPages,
   params,
+  basePath = "/kataloq",
 }: {
   page: number;
   totalPages: number;
   params: Params;
+  basePath?: string;
 }) {
   if (totalPages <= 1) return null;
 
@@ -48,7 +50,7 @@ export function Pagination({
     >
       {page > 1 ? (
         <Link
-          href={buildHref(params, page - 1)}
+          href={buildHref(basePath, params, page - 1)}
           rel="prev"
           aria-label="Əvvəlki səhifə"
           className={cn(linkCls, "border-line-strong text-cream hover:border-gold hover:text-gold")}
@@ -69,7 +71,7 @@ export function Pagination({
         ) : (
           <Link
             key={p}
-            href={buildHref(params, p)}
+            href={buildHref(basePath, params, p)}
             aria-current={p === page ? "page" : undefined}
             className={cn(
               linkCls,
@@ -85,7 +87,7 @@ export function Pagination({
 
       {page < totalPages ? (
         <Link
-          href={buildHref(params, page + 1)}
+          href={buildHref(basePath, params, page + 1)}
           rel="next"
           aria-label="Növbəti səhifə"
           className={cn(linkCls, "border-line-strong text-cream hover:border-gold hover:text-gold")}
