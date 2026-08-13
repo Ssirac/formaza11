@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import { AnnouncementBar } from "@/components/site/announcement-bar";
+import { FloatingSocials } from "@/components/site/floating-socials";
 import { StoreProvider } from "@/components/store/store";
 import { getSettings } from "@/lib/queries";
 
@@ -20,6 +21,11 @@ export default async function SiteLayout({
       <Navbar whatsappNumber={s.whatsappNumber} />
       <main className="flex-1">{children}</main>
       <Footer
+        whatsappNumber={s.whatsappNumber}
+        instagramUrl={s.instagramUrl}
+        tiktokUrl={s.tiktokUrl}
+      />
+      <FloatingSocials
         whatsappNumber={s.whatsappNumber}
         instagramUrl={s.instagramUrl}
         tiktokUrl={s.tiktokUrl}

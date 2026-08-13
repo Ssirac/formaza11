@@ -95,6 +95,18 @@ export function Footer({
           <p>© {year} FORMAZA11. Bütün hüquqlar qorunur.</p>
           <p>forma + mağaza + starting eleven</p>
         </div>
+
+        <div className="mt-4 text-center text-xs text-faint">
+          Hazırladı:{" "}
+          <a
+            href="https://ssweb-dev.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-muted transition-colors hover:text-gold"
+          >
+            SS Web
+          </a>
+        </div>
       </div>
     </footer>
   );

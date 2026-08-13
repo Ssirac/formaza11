@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { ImageStreamHero } from "@/components/ui/image-stream-hero";
 import { buttonClasses } from "@/components/ui/button";
+import { HeroSlogans } from "@/components/home/hero-slogans";
 
 /**
  * Hero that leads with the shop's own jersey photos flowing in a 3D corridor,
@@ -36,13 +37,10 @@ export function CorridorHero({
             Azərbaycanın forma ünvanı
           </span>
 
-          <h1 className="font-display text-[14vw] font-black italic uppercase leading-[0.86] tracking-tight sm:text-7xl lg:text-8xl">
-            {lines.map((line, i) => (
-              <span key={i} className="block text-metal-gold drop-shadow-2xl">
-                {line}
-              </span>
-            ))}
-          </h1>
+          <h1 className="sr-only">{lines.join(" ")}</h1>
+          <div aria-hidden>
+            <HeroSlogans className="min-h-[2.4em] justify-center text-center font-display text-4xl font-black italic uppercase leading-[0.95] tracking-tight drop-shadow-2xl sm:text-5xl lg:text-6xl" />
+          </div>
 
           <p className="max-w-xl text-base leading-relaxed text-cream/80 sm:text-lg">
             {subtitle}

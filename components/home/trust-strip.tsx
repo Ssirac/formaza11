@@ -4,8 +4,8 @@ import type { LucideIcon } from "lucide-react";
 const ITEMS: { icon: LucideIcon; title: string; text: string }[] = [
   {
     icon: Truck,
-    title: "Bütün bölgələrə çatdırılma",
-    text: "Sifarişini ünvanına göndəririk",
+    title: "Metro və bölgələrə çatdırılma",
+    text: "Metrolara çatdırılıq, bölgələrə poçtla göndəririk",
   },
   {
     icon: ShieldCheck,

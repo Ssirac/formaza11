@@ -6,12 +6,11 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { buttonClasses } from "@/components/ui/button";
 import { ShaderAnimation } from "@/components/ui/shader-lines";
+import { HeroSlogans } from "@/components/home/hero-slogans";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function Hero({ title, subtitle }: { title: string; subtitle: string }) {
-  const lines = title.split("\n").filter(Boolean);
-
   // magnetic primary CTA
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -50,19 +49,13 @@ export function Hero({ title, subtitle }: { title: string; subtitle: string }) {
             Azərbaycanın forma ünvanı
           </motion.span>
 
-          <h1 className="mt-6 font-display text-[15vw] font-black italic uppercase leading-[0.86] tracking-tight sm:text-7xl lg:text-8xl">
-            {lines.map((line, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: EASE, delay: 0.1 + i * 0.1 }}
-                className="block text-metal-gold"
-              >
-                {line}
-              </motion.span>
-            ))}
-          </h1>
+          {/* Visually hidden real heading for SEO / screen readers */}
+          <h1 className="sr-only">{title.split("\n").filter(Boolean).join(" ")}</h1>
+
+          {/* Rotating slogans with the shutter animation */}
+          <div className="mt-6" aria-hidden>
+            <HeroSlogans className="min-h-[2.4em] w-full justify-start text-left font-display text-4xl font-black italic uppercase leading-[0.95] tracking-tight sm:text-5xl lg:text-6xl" />
+          </div>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -125,12 +118,12 @@ export function Hero({ title, subtitle }: { title: string; subtitle: string }) {
           transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}
           className="relative mx-auto hidden aspect-square w-full max-w-md items-center justify-center lg:flex"
         >
-          <div className="absolute inset-0 rounded-full border border-gold/20" />
-          <div className="absolute inset-8 rounded-full border border-gold/10" />
+          <div className="absolute inset-0 rounded-3xl border border-gold/20" />
+          <div className="absolute inset-8 rounded-3xl border border-gold/10" />
           <motion.div
             animate={{ y: [0, -14, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="glow-gold rounded-full"
+            className="glow-gold rounded-xl"
           >
             <Image
               src="/brand/formaza11-badge.png"
@@ -138,7 +131,7 @@ export function Hero({ title, subtitle }: { title: string; subtitle: string }) {
               width={224}
               height={224}
               priority
-              className="h-56 w-56 rounded-full object-contain drop-shadow-[0_0_40px_rgba(59,130,246,0.45)]"
+              className="h-56 w-56 rounded-xl object-contain drop-shadow-[0_0_40px_rgba(59,130,246,0.45)]"
             />
           </motion.div>
         </motion.div>

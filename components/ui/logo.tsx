@@ -75,7 +75,7 @@ export function Logo({
         width={40}
         height={40}
         priority
-        className="h-9 w-9 shrink-0 rounded-full object-contain"
+        className="h-9 w-9 shrink-0 rounded-xl object-contain"
       />
       {showText && (
         <span className="font-display text-xl font-extrabold italic tracking-tight leading-none">
