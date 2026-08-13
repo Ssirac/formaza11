@@ -27,13 +27,11 @@ function Row({ items, reverse }: { items: Crest[]; reverse?: boolean }) {
   return (
     <div className="pause-on-hover flex overflow-hidden">
       <div
-        style={{ animationDuration: `${durationSec}s` }}
-        className={cn(
-          "flex w-max gap-3 pr-3",
-          reverse
-            ? "animate-marquee-slow [animation-direction:reverse]"
-            : "animate-marquee-slow"
-        )}
+        style={{
+          animationDuration: `${durationSec}s`,
+          animationDirection: reverse ? "reverse" : "normal",
+        }}
+        className="animate-marquee-slow flex w-max gap-3 pr-3"
       >
         {doubled.map((c, i) => (
           <Pill key={`${c.src}-${i}`} crest={c} />
@@ -42,6 +40,14 @@ function Row({ items, reverse }: { items: Crest[]; reverse?: boolean }) {
     </div>
   );
 }
+
+const ROW_COUNT = 4;
+
+/** All crests spread evenly across the rows (round-robin keeps each row mixed). */
+const ROWS: Crest[][] = Array.from({ length: ROW_COUNT }, () => []);
+[...CLUB_CRESTS, ...NATION_CRESTS].forEach((crest, i) => {
+  ROWS[i % ROW_COUNT].push(crest);
+});
 
 export function TeamsMarquee() {
   return (
@@ -53,8 +59,9 @@ export function TeamsMarquee() {
         description="Avropanın böyük klublarından milli komandalara qədər — istədiyin formanı WhatsApp-da soruş."
       />
       <div className="mt-10 space-y-3 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
-        <Row items={CLUB_CRESTS} />
-        <Row items={NATION_CRESTS} reverse />
+        {ROWS.map((items, i) => (
+          <Row key={i} items={items} reverse={i % 2 === 1} />
+        ))}
       </div>
     </section>
   );
