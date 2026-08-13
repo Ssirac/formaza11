@@ -10,6 +10,7 @@ import { FilterChips } from "@/components/catalog/filter-chips";
 import { SizeFilter } from "@/components/catalog/size-filter";
 import { CatalogSearch } from "@/components/catalog/catalog-search";
 import { CatalogSkeleton } from "@/components/catalog/catalog-skeleton";
+import { Pagination } from "@/components/catalog/pagination";
 import { ProductGrid } from "@/components/product/product-grid";
 
 export const dynamic = "force-dynamic";
@@ -26,14 +27,21 @@ async function Results({
   categorySlug,
   q,
   size,
+  page,
   whatsappNumber,
 }: {
   categorySlug?: string;
   q?: string;
   size?: string;
+  page: number;
   whatsappNumber: string;
 }) {
-  const products = await getVisibleProducts({ categorySlug, q, size });
+  const { products, total, page: current, totalPages } = await getVisibleProducts({
+    categorySlug,
+    q,
+    size,
+    page,
+  });
 
   if (products.length === 0) {
     return (
@@ -53,7 +61,20 @@ async function Results({
     );
   }
 
-  return <ProductGrid products={products} whatsappNumber={whatsappNumber} />;
+  return (
+    <>
+      <p className="mb-6 text-sm text-muted">
+        {total} forma tapıldı
+        {totalPages > 1 ? ` · səhifə ${current}/${totalPages}` : ""}
+      </p>
+      <ProductGrid products={products} whatsappNumber={whatsappNumber} />
+      <Pagination
+        page={current}
+        totalPages={totalPages}
+        params={{ kateqoriya: categorySlug, axtar: q, olcu: size }}
+      />
+    </>
+  );
 }
 
 export default async function CatalogPage({
@@ -66,13 +87,17 @@ export default async function CatalogPage({
     typeof sp.kateqoriya === "string" ? sp.kateqoriya : undefined;
   const q = typeof sp.axtar === "string" ? sp.axtar : undefined;
   const size = typeof sp.olcu === "string" ? sp.olcu : undefined;
+  const page = Math.max(
+    1,
+    Math.trunc(Number(typeof sp.sehife === "string" ? sp.sehife : 1)) || 1
+  );
 
   const [categories, settings] = await Promise.all([
     getCategories(),
     getSettings(),
   ]);
 
-  const key = `${categorySlug ?? ""}|${q ?? ""}|${size ?? ""}`;
+  const key = `${categorySlug ?? ""}|${q ?? ""}|${size ?? ""}|${page}`;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -100,6 +125,7 @@ export default async function CatalogPage({
             categorySlug={categorySlug}
             q={q}
             size={size}
+            page={page}
             whatsappNumber={settings.whatsappNumber}
           />
         </Suspense>

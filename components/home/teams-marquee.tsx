@@ -1,63 +1,38 @@
 import { SectionHeading } from "./section-heading";
 import { cn } from "@/lib/utils";
+import { CLUB_CRESTS, NATION_CRESTS, type Crest } from "@/lib/club-logos";
 
-const CLUBS = [
-  "Real Madrid",
-  "Barcelona",
-  "Manchester United",
-  "Manchester City",
-  "Liverpool",
-  "Arsenal",
-  "Chelsea",
-  "Bayern München",
-  "Paris Saint-Germain",
-  "Juventus",
-  "AC Milan",
-  "Inter",
-  "Qarabağ FK",
-  "Napoli",
-  "Atlético Madrid",
-  "Borussia Dortmund",
-];
-
-const NATIONS = [
-  "Azərbaycan",
-  "Argentina",
-  "Braziliya",
-  "Fransa",
-  "Portuqaliya",
-  "İspaniya",
-  "Almaniya",
-  "İtaliya",
-  "İngiltərə",
-  "Türkiyə",
-  "Xorvatiya",
-  "Niderland",
-  "Belçika",
-  "Uruqvay",
-];
-
-function Pill({ name }: { name: string }) {
+function Pill({ crest }: { crest: Crest }) {
   return (
-    <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-line-strong bg-surface px-5 py-2.5 text-sm font-semibold text-cream transition-colors hover:border-gold hover:text-gold">
-      <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-      {name}
+    <span className="inline-flex shrink-0 items-center gap-2.5 rounded-full border border-line bg-surface px-4 py-2 text-sm font-semibold text-cream transition-colors hover:border-gold hover:text-gold">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={crest.src}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className="h-7 w-7 shrink-0 object-contain"
+        draggable={false}
+      />
+      <span className="whitespace-nowrap">{crest.name}</span>
     </span>
   );
 }
 
-function Row({ items, reverse }: { items: string[]; reverse?: boolean }) {
+function Row({ items, reverse }: { items: Crest[]; reverse?: boolean }) {
   const doubled = [...items, ...items];
   return (
     <div className="pause-on-hover flex overflow-hidden">
       <div
         className={cn(
           "flex w-max gap-3 pr-3",
-          reverse ? "animate-marquee-slow [animation-direction:reverse]" : "animate-marquee-slow"
+          reverse
+            ? "animate-marquee-slow [animation-direction:reverse]"
+            : "animate-marquee-slow"
         )}
       >
-        {doubled.map((t, i) => (
-          <Pill key={`${t}-${i}`} name={t} />
+        {doubled.map((c, i) => (
+          <Pill key={`${c.src}-${i}`} crest={c} />
         ))}
       </div>
     </div>
@@ -74,8 +49,8 @@ export function TeamsMarquee() {
         description="Avropanın böyük klublarından milli komandalara qədər — istədiyin formanı WhatsApp-da soruş."
       />
       <div className="mt-10 space-y-3 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
-        <Row items={CLUBS} />
-        <Row items={NATIONS} reverse />
+        <Row items={CLUB_CRESTS} />
+        <Row items={NATION_CRESTS} reverse />
       </div>
     </section>
   );

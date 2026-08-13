@@ -73,11 +73,23 @@ export async function getFeaturedProducts(limit = 8): Promise<ProductDTO[]> {
   }
 }
 
+export type PagedProducts = {
+  products: ProductDTO[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+};
+
 export async function getVisibleProducts(opts?: {
   categorySlug?: string;
   q?: string;
   size?: string;
-}): Promise<ProductDTO[]> {
+  page?: number;
+  pageSize?: number;
+}): Promise<PagedProducts> {
+  const page = Math.max(1, Math.trunc(opts?.page ?? 1));
+  const pageSize = Math.min(60, Math.max(1, Math.trunc(opts?.pageSize ?? 24)));
   try {
     const where: any = { isHidden: false };
     if (opts?.categorySlug) where.category = { slug: opts.categorySlug };
@@ -89,14 +101,27 @@ export async function getVisibleProducts(opts?: {
       ];
     }
     if (opts?.size) where.sizes = { array_contains: opts.size };
-    const products = await prisma.product.findMany({
-      where,
-      include: { category: true },
-      orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
-    });
-    return products.map(toProductDTO);
+
+    const [rows, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        include: { category: true },
+        orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      prisma.product.count({ where }),
+    ]);
+
+    return {
+      products: rows.map(toProductDTO),
+      total,
+      page,
+      pageSize,
+      totalPages: Math.max(1, Math.ceil(total / pageSize)),
+    };
   } catch {
-    return [];
+    return { products: [], total: 0, page, pageSize, totalPages: 1 };
   }
 }
 
