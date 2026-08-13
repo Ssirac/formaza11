@@ -4,14 +4,14 @@ import { CLUB_CRESTS, NATION_CRESTS, type Crest } from "@/lib/club-logos";
 
 function Pill({ crest }: { crest: Crest }) {
   return (
-    <span className="inline-flex shrink-0 items-center gap-2.5 rounded-full border border-line bg-surface px-4 py-2 text-sm font-semibold text-cream transition-colors hover:border-gold hover:text-gold">
+    <span className="inline-flex shrink-0 items-center gap-2.5 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold text-cream transition-colors hover:border-gold hover:text-gold">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={crest.src}
         alt=""
         loading="lazy"
         decoding="async"
-        className="h-7 w-7 shrink-0 object-contain"
+        className="h-9 w-9 shrink-0 object-contain"
         draggable={false}
       />
       <span className="whitespace-nowrap">{crest.name}</span>
@@ -21,9 +21,13 @@ function Pill({ crest }: { crest: Crest }) {
 
 function Row({ items, reverse }: { items: Crest[]; reverse?: boolean }) {
   const doubled = [...items, ...items];
+  // Duration scales with the row length so both rows scroll at the same,
+  // calm speed regardless of how many crests they hold.
+  const durationSec = Math.max(60, Math.round(items.length * 2.2));
   return (
     <div className="pause-on-hover flex overflow-hidden">
       <div
+        style={{ animationDuration: `${durationSec}s` }}
         className={cn(
           "flex w-max gap-3 pr-3",
           reverse

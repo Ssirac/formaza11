@@ -50,6 +50,8 @@ export default async function HomePage() {
       <TrustStrip />
 
       <div className="mx-auto max-w-7xl space-y-24 px-4 py-20 sm:px-6 lg:px-8">
+        <TeamsMarquee />
+
         {/* Featured */}
         <section>
           <SectionHeading
@@ -94,8 +96,6 @@ export default async function HomePage() {
             <CategoryGrid categories={categories} />
           </div>
         </section>
-
-        <TeamsMarquee />
 
         <Suspense fallback={null}>
           <FootballScores />
