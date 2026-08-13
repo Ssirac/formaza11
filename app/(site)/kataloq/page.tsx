@@ -9,9 +9,11 @@ import {
 import { FilterChips } from "@/components/catalog/filter-chips";
 import { SizeFilter } from "@/components/catalog/size-filter";
 import { CatalogSearch } from "@/components/catalog/catalog-search";
+import { CatalogControls } from "@/components/catalog/catalog-controls";
 import { CatalogSkeleton } from "@/components/catalog/catalog-skeleton";
 import { Pagination } from "@/components/catalog/pagination";
 import { ProductGrid } from "@/components/product/product-grid";
+import type { ProductSort } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -27,12 +29,16 @@ async function Results({
   categorySlug,
   q,
   size,
+  sort,
+  inStock,
   page,
   whatsappNumber,
 }: {
   categorySlug?: string;
   q?: string;
   size?: string;
+  sort?: ProductSort;
+  inStock?: boolean;
   page: number;
   whatsappNumber: string;
 }) {
@@ -40,6 +46,8 @@ async function Results({
     categorySlug,
     q,
     size,
+    sort,
+    inStock,
     page,
   });
 
@@ -71,7 +79,13 @@ async function Results({
       <Pagination
         page={current}
         totalPages={totalPages}
-        params={{ kateqoriya: categorySlug, axtar: q, olcu: size }}
+        params={{
+          kateqoriya: categorySlug,
+          axtar: q,
+          olcu: size,
+          sirala: sort && sort !== "yeni" ? sort : undefined,
+          stok: inStock ? "eldedir" : undefined,
+        }}
       />
     </>
   );
@@ -87,6 +101,10 @@ export default async function CatalogPage({
     typeof sp.kateqoriya === "string" ? sp.kateqoriya : undefined;
   const q = typeof sp.axtar === "string" ? sp.axtar : undefined;
   const size = typeof sp.olcu === "string" ? sp.olcu : undefined;
+  const sortRaw = typeof sp.sirala === "string" ? sp.sirala : undefined;
+  const sort: ProductSort =
+    sortRaw === "ad" || sortRaw === "populyar" ? sortRaw : "yeni";
+  const inStock = sp.stok === "eldedir";
   const page = Math.max(
     1,
     Math.trunc(Number(typeof sp.sehife === "string" ? sp.sehife : 1)) || 1
@@ -97,7 +115,9 @@ export default async function CatalogPage({
     getSettings(),
   ]);
 
-  const key = `${categorySlug ?? ""}|${q ?? ""}|${size ?? ""}|${page}`;
+  const key = `${categorySlug ?? ""}|${q ?? ""}|${size ?? ""}|${sort}|${
+    inStock ? "1" : "0"
+  }|${page}`;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -116,7 +136,10 @@ export default async function CatalogPage({
           <FilterChips categories={categories} active={categorySlug} q={q} />
           <CatalogSearch />
         </div>
-        <SizeFilter />
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <SizeFilter />
+          <CatalogControls />
+        </div>
       </div>
 
       <div className="mt-10">
@@ -125,6 +148,8 @@ export default async function CatalogPage({
             categorySlug={categorySlug}
             q={q}
             size={size}
+            sort={sort}
+            inStock={inStock}
             page={page}
             whatsappNumber={settings.whatsappNumber}
           />

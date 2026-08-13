@@ -1,10 +1,14 @@
+import Link from "next/link";
 import { SectionHeading } from "./section-heading";
-import { cn } from "@/lib/utils";
 import { CLUB_CRESTS, NATION_CRESTS, type Crest } from "@/lib/club-logos";
 
 function Pill({ crest }: { crest: Crest }) {
   return (
-    <span className="inline-flex shrink-0 items-center gap-2.5 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold text-cream transition-colors hover:border-gold hover:text-gold">
+    <Link
+      href={`/kataloq?axtar=${encodeURIComponent(crest.name)}`}
+      aria-label={`${crest.name} formaları`}
+      className="inline-flex shrink-0 items-center gap-2.5 rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold text-cream transition-colors hover:border-gold hover:text-gold"
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={crest.src}
@@ -15,7 +19,7 @@ function Pill({ crest }: { crest: Crest }) {
         draggable={false}
       />
       <span className="whitespace-nowrap">{crest.name}</span>
-    </span>
+    </Link>
   );
 }
 

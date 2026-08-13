@@ -81,18 +81,30 @@ export type PagedProducts = {
   totalPages: number;
 };
 
+export type ProductSort = "yeni" | "ad" | "populyar";
+
+function orderByFor(sort?: ProductSort): any {
+  if (sort === "ad") return [{ name: "asc" }];
+  if (sort === "populyar")
+    return [{ clicks: { _count: "desc" } }, { createdAt: "desc" }];
+  return [{ isFeatured: "desc" }, { createdAt: "desc" }];
+}
+
 export async function getVisibleProducts(opts?: {
   categorySlug?: string;
   q?: string;
   size?: string;
+  sort?: ProductSort;
+  inStock?: boolean;
   page?: number;
   pageSize?: number;
 }): Promise<PagedProducts> {
-  const page = Math.max(1, Math.trunc(opts?.page ?? 1));
+  let page = Math.max(1, Math.trunc(opts?.page ?? 1));
   const pageSize = Math.min(60, Math.max(1, Math.trunc(opts?.pageSize ?? 24)));
   try {
     const where: any = { isHidden: false };
     if (opts?.categorySlug) where.category = { slug: opts.categorySlug };
+    if (opts?.inStock) where.stockStatus = "in_stock";
     if (opts?.q && opts.q.trim()) {
       const term = opts.q.trim();
       where.OR = [
@@ -102,26 +114,43 @@ export async function getVisibleProducts(opts?: {
     }
     if (opts?.size) where.sizes = { array_contains: opts.size };
 
-    const [rows, total] = await Promise.all([
-      prisma.product.findMany({
-        where,
-        include: { category: true },
-        orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-      }),
-      prisma.product.count({ where }),
-    ]);
+    // Count first so an out-of-range page (e.g. after changing a filter)
+    // clamps to the last page instead of showing an empty result.
+    const total = await prisma.product.count({ where });
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if (page > totalPages) page = totalPages;
+
+    const rows = await prisma.product.findMany({
+      where,
+      include: { category: true, _count: { select: { clicks: true } } },
+      orderBy: orderByFor(opts?.sort),
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
 
     return {
       products: rows.map(toProductDTO),
       total,
       page,
       pageSize,
-      totalPages: Math.max(1, Math.ceil(total / pageSize)),
+      totalPages,
     };
   } catch {
     return { products: [], total: 0, page, pageSize, totalPages: 1 };
+  }
+}
+
+export async function getMostViewedProducts(limit = 8): Promise<ProductDTO[]> {
+  try {
+    const products = await prisma.product.findMany({
+      where: { isHidden: false, clicks: { some: {} } },
+      include: { category: true, _count: { select: { clicks: true } } },
+      orderBy: [{ clicks: { _count: "desc" } }, { createdAt: "desc" }],
+      take: limit,
+    });
+    return products.map(toProductDTO);
+  } catch {
+    return [];
   }
 }
 

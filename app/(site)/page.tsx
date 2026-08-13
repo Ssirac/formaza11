@@ -14,20 +14,23 @@ import { CategoryGrid } from "@/components/home/category-grid";
 import { HowTo } from "@/components/home/how-to";
 import { SizeGuide } from "@/components/home/size-guide";
 import { Faq } from "@/components/home/faq";
+import { ProductGrid } from "@/components/product/product-grid";
 import { buttonClasses } from "@/components/ui/button";
 import {
   getSettings,
   getFeaturedProducts,
   getCategories,
+  getMostViewedProducts,
 } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [settings, featured, categories] = await Promise.all([
+  const [settings, featured, categories, mostViewed] = await Promise.all([
     getSettings(),
     getFeaturedProducts(12),
     getCategories(),
+    getMostViewedProducts(8),
   ]);
 
   const heroImages = featured
@@ -96,6 +99,22 @@ export default async function HomePage() {
             <CategoryGrid categories={categories} />
           </div>
         </section>
+
+        {mostViewed.length > 0 && (
+          <section>
+            <SectionHeading
+              kicker="Ən çox baxılanlar"
+              title="Populyar formalar"
+              description="Ziyarətçilərin ən çox baxdığı və axtardığı formalar."
+            />
+            <div className="mt-12">
+              <ProductGrid
+                products={mostViewed}
+                whatsappNumber={settings.whatsappNumber}
+              />
+            </div>
+          </section>
+        )}
 
         <Suspense fallback={null}>
           <FootballScores />
