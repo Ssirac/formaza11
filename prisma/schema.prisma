@@ -23,6 +23,10 @@ model Product {
   isHidden    Boolean      @default(false)
   isFeatured  Boolean      @default(false)
   stockStatus String       @default("in_stock") // "in_stock" | "on_way"
+  // Admin-only pricing — NEVER exposed on the public site / ProductDTO.
+  costPrice    Float?      // 1688 / China cost
+  shippingCost Float?      // delivery cost
+  salePrice    Float?      // final price shown to the customer (via WhatsApp)
   clicks      ClickEvent[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

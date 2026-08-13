@@ -7,6 +7,8 @@ import { assertAdmin } from "@/lib/session";
 import { slugify } from "@/lib/utils";
 import { uploadImage, isCloudinaryConfigured } from "@/lib/cloudinary";
 
+const price = z.number().nonnegative().nullable().optional();
+
 const ProductInput = z.object({
   name: z.string().trim().min(1, "Ad boş ola bilməz"),
   slug: z.string().trim().optional().default(""),
@@ -17,6 +19,10 @@ const ProductInput = z.object({
   isFeatured: z.boolean().default(false),
   isHidden: z.boolean().default(false),
   stockStatus: z.enum(["in_stock", "on_way"]).default("in_stock"),
+  // Admin-only pricing (never shown on the public site).
+  costPrice: price,
+  shippingCost: price,
+  salePrice: price,
 });
 
 export type ProductInputData = z.infer<typeof ProductInput>;
@@ -63,6 +69,9 @@ export async function createProduct(
         isFeatured: data.isFeatured,
         isHidden: data.isHidden,
         stockStatus: data.stockStatus,
+        costPrice: data.costPrice ?? null,
+        shippingCost: data.shippingCost ?? null,
+        salePrice: data.salePrice ?? null,
       },
     });
     revalidateAll(slug);
@@ -92,6 +101,9 @@ export async function updateProduct(
         isFeatured: data.isFeatured,
         isHidden: data.isHidden,
         stockStatus: data.stockStatus,
+        costPrice: data.costPrice ?? null,
+        shippingCost: data.shippingCost ?? null,
+        salePrice: data.salePrice ?? null,
       },
     });
     revalidateAll(slug);

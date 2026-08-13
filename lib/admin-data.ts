@@ -138,13 +138,31 @@ export async function getAdminProducts(opts?: {
   }
 }
 
-export async function getProductForEdit(id: string): Promise<ProductDTO | null> {
+export type ProductPricing = {
+  costPrice: number | null;
+  shippingCost: number | null;
+  salePrice: number | null;
+};
+
+export type AdminProductForEdit = ProductDTO & { pricing: ProductPricing };
+
+export async function getProductForEdit(
+  id: string
+): Promise<AdminProductForEdit | null> {
   try {
     const p = await prisma.product.findUnique({
       where: { id },
       include: { category: true, _count: { select: { clicks: true } } },
     });
-    return p ? toProductDTO(p) : null;
+    if (!p) return null;
+    return {
+      ...toProductDTO(p),
+      pricing: {
+        costPrice: (p as any).costPrice ?? null,
+        shippingCost: (p as any).shippingCost ?? null,
+        salePrice: (p as any).salePrice ?? null,
+      },
+    };
   } catch {
     return null;
   }

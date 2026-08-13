@@ -4,8 +4,9 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { LoaderCircle, Star, EyeOff } from "lucide-react";
+import { LoaderCircle, Star, EyeOff, Wallet } from "lucide-react";
 import type { ProductDTO } from "@/lib/types";
+import type { ProductPricing } from "@/lib/admin-data";
 import { SIZE_GROUPS, STOCK_STATUSES } from "@/lib/constants";
 import { createProduct, updateProduct } from "@/lib/actions/products";
 import { slugify } from "@/lib/utils";
@@ -17,12 +18,24 @@ import { cn } from "@/lib/utils";
 
 type Category = { id: string; name: string };
 
+const numToStr = (n: number | null | undefined) =>
+  n === null || n === undefined ? "" : String(n);
+
+const strToNum = (s: string): number | null => {
+  const t = s.trim().replace(",", ".");
+  if (!t) return null;
+  const n = Number(t);
+  return Number.isFinite(n) && n >= 0 ? n : null;
+};
+
 export function ProductForm({
   categories,
   initial,
+  initialPricing,
 }: {
   categories: Category[];
   initial?: ProductDTO;
+  initialPricing?: ProductPricing;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -41,8 +54,19 @@ export function ProductForm({
   const [stockStatus, setStockStatus] = useState<string>(
     initial?.stockStatus ?? "in_stock"
   );
+  const [costPrice, setCostPrice] = useState(numToStr(initialPricing?.costPrice));
+  const [shippingCost, setShippingCost] = useState(
+    numToStr(initialPricing?.shippingCost)
+  );
+  const [salePrice, setSalePrice] = useState(numToStr(initialPricing?.salePrice));
 
   const finalSlug = (slugTouched ? slug : slugify(name)) || "forma";
+
+  const costN = strToNum(costPrice);
+  const shipN = strToNum(shippingCost);
+  const saleN = strToNum(salePrice);
+  const profit =
+    saleN !== null ? saleN - (costN ?? 0) - (shipN ?? 0) : null;
 
   function toggleSize(s: string) {
     setSizes((prev) =>
@@ -69,6 +93,9 @@ export function ProductForm({
       isFeatured,
       isHidden,
       stockStatus: stockStatus as "in_stock" | "on_way",
+      costPrice: strToNum(costPrice),
+      shippingCost: strToNum(shippingCost),
+      salePrice: strToNum(salePrice),
     };
     startTransition(async () => {
       const res = initial
@@ -215,6 +242,68 @@ export function ProductForm({
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="space-y-4 rounded-2xl border border-line bg-surface p-6">
+          <div className="flex items-center gap-2">
+            <Wallet className="h-4 w-4 text-gold" />
+            <p className="text-sm font-semibold text-cream">Qiymət</p>
+          </div>
+          <p className="text-xs text-faint">
+            Yalnız admin paneldə görünür — saytda müştəriyə göstərilmir.
+          </p>
+          <Field label="Maya dəyəri (1688)" htmlFor="costPrice">
+            <input
+              id="costPrice"
+              type="number"
+              inputMode="decimal"
+              min="0"
+              step="0.01"
+              value={costPrice}
+              onChange={(e) => setCostPrice(e.target.value)}
+              placeholder="0"
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Çatdırılma xərci" htmlFor="shippingCost">
+            <input
+              id="shippingCost"
+              type="number"
+              inputMode="decimal"
+              min="0"
+              step="0.01"
+              value={shippingCost}
+              onChange={(e) => setShippingCost(e.target.value)}
+              placeholder="0"
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Son qiymət (müştəri)" htmlFor="salePrice">
+            <input
+              id="salePrice"
+              type="number"
+              inputMode="decimal"
+              min="0"
+              step="0.01"
+              value={salePrice}
+              onChange={(e) => setSalePrice(e.target.value)}
+              placeholder="0"
+              className={inputClass}
+            />
+          </Field>
+          {profit !== null && (
+            <div className="flex items-center justify-between rounded-lg border border-line-strong bg-ink-2 px-3 py-2 text-sm">
+              <span className="text-muted">Təxmini mənfəət</span>
+              <span
+                className={cn(
+                  "font-bold",
+                  profit >= 0 ? "text-pitch" : "text-red-400"
+                )}
+              >
+                {profit.toFixed(2)}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="space-y-4 rounded-2xl border border-line bg-surface p-6">

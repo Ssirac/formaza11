@@ -23,6 +23,7 @@ export default async function EditProductPage({
       <ProductForm
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}
         initial={product}
+        initialPricing={product.pricing}
       />
     </div>
   );
