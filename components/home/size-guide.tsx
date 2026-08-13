@@ -15,7 +15,7 @@ export function SizeGuide() {
       <Reveal className="mt-10">
         <div className="overflow-hidden rounded-2xl border border-line bg-surface">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[520px] text-left text-sm">
+            <table className="w-full min-w-[680px] text-left text-sm">
               <thead>
                 <tr className="border-b border-line bg-ink-2/60 text-xs uppercase tracking-wider text-silver-deep">
                   <th className="px-5 py-4 font-semibold">
@@ -24,9 +24,11 @@ export function SizeGuide() {
                       Ölçü
                     </span>
                   </th>
+                  <th className="px-5 py-4 font-semibold">Boy (sm)</th>
+                  <th className="px-5 py-4 font-semibold">Çəki (kg)</th>
                   <th className="px-5 py-4 font-semibold">Sinə (sm)</th>
                   <th className="px-5 py-4 font-semibold">Uzunluq (sm)</th>
-                  <th className="px-5 py-4 font-semibold">Təxmini beden</th>
+                  <th className="px-5 py-4 font-semibold">Təxmini bədən</th>
                 </tr>
               </thead>
               <tbody>
@@ -40,6 +42,8 @@ export function SizeGuide() {
                         {r.size}
                       </span>
                     </td>
+                    <td className="px-5 py-4 text-cream">{r.height}</td>
+                    <td className="px-5 py-4 text-cream">{r.weight}</td>
                     <td className="px-5 py-4 text-cream">{r.chest}</td>
                     <td className="px-5 py-4 text-cream">{r.length}</td>
                     <td className="px-5 py-4 text-muted">{r.advice}</td>

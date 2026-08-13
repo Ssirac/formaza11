@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { WhatsAppIcon } from "@/components/ui/icons";
@@ -22,6 +23,7 @@ const LINKS = [
 export function Navbar({ whatsappNumber }: { whatsappNumber: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -45,7 +47,18 @@ export function Navbar({ whatsappNumber }: { whatsappNumber: string }) {
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link href="/" aria-label="FORMAZA11 ana səhifə" className="shrink-0">
+        <Link
+          href="/"
+          aria-label="FORMAZA11 ana səhifə"
+          className="shrink-0"
+          onClick={(e) => {
+            if (pathname === "/") {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+            setOpen(false);
+          }}
+        >
           <Logo />
         </Link>
 

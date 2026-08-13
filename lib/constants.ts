@@ -63,11 +63,11 @@ export const HOW_TO_STEPS = [
 ] as const;
 
 export const SIZE_GUIDE_ROWS = [
-  { size: "S", chest: "88–94", length: "68", advice: "48–52 beden" },
-  { size: "M", chest: "96–102", length: "71", advice: "52–54 beden" },
-  { size: "L", chest: "104–110", length: "74", advice: "54–56 beden" },
-  { size: "XL", chest: "112–118", length: "77", advice: "56–58 beden" },
-  { size: "XXL", chest: "120–126", length: "80", advice: "58–60 beden" },
+  { size: "S", chest: "88–94", length: "68", height: "165–172", weight: "55–65", advice: "48–52 bədən" },
+  { size: "M", chest: "96–102", length: "71", height: "170–178", weight: "64–74", advice: "52–54 bədən" },
+  { size: "L", chest: "104–110", length: "74", height: "176–183", weight: "73–84", advice: "54–56 bədən" },
+  { size: "XL", chest: "112–118", length: "77", height: "181–188", weight: "83–95", advice: "56–58 bədən" },
+  { size: "XXL", chest: "120–126", length: "80", height: "186–195", weight: "94–108", advice: "58–60 bədən" },
 ] as const;
 
 export const SIZE_NOTE =
