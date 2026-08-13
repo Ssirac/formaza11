@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Inbox, ExternalLink } from "lucide-react";
+import { ChevronLeft, ChevronRight, Inbox } from "lucide-react";
 import { getLeads } from "@/lib/admin-data";
 import { PageHeader } from "@/components/admin/page-header";
-import { formatDate } from "@/lib/utils";
+import { LeadsTable } from "@/components/admin/leads-table";
 
 export const dynamic = "force-dynamic";
 
@@ -47,52 +47,7 @@ export default async function LeadsPage({
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-line bg-surface">
-          <div className="hidden grid-cols-[1fr_90px_110px_160px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
-            <span>Forma</span>
-            <span className="text-center">Ölçü</span>
-            <span className="text-right">Qiymət (₼)</span>
-            <span className="text-right">Tarix</span>
-          </div>
-          <ul className="divide-y divide-line">
-            {leads.map((l) => (
-              <li
-                key={l.id}
-                className="grid grid-cols-1 gap-2 px-5 py-4 lg:grid-cols-[1fr_90px_110px_160px] lg:items-center"
-              >
-                <div className="flex items-center gap-2">
-                  {l.slug ? (
-                    <Link
-                      href={`/forma/${l.slug}`}
-                      target="_blank"
-                      className="inline-flex items-center gap-1.5 font-medium text-cream hover:text-gold"
-                    >
-                      {l.productName}
-                      <ExternalLink className="h-3.5 w-3.5 text-faint" />
-                    </Link>
-                  ) : (
-                    <span className="font-medium text-cream">{l.productName}</span>
-                  )}
-                </div>
-                <div className="text-sm lg:text-center">
-                  <span className="text-xs text-muted lg:hidden">Ölçü: </span>
-                  <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-md border border-line-strong px-2 text-xs font-semibold text-cream">
-                    {l.size}
-                  </span>
-                </div>
-                <div className="text-sm lg:text-right">
-                  <span className="text-xs text-muted lg:hidden">Qiymət: </span>
-                  <span className="font-semibold text-cream">
-                    {l.salePrice != null ? `${l.salePrice} ₼` : "—"}
-                  </span>
-                </div>
-                <div className="text-xs text-faint lg:text-right">
-                  {formatDate(l.createdAt)}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <LeadsTable leads={leads} />
       )}
 
       {totalPages > 1 && (
