@@ -18,6 +18,19 @@ interface ShutterTextProps extends HTMLAttributes<HTMLDivElement> {
   accentClassName?: string;
 }
 
+/** Split into words (keeping spaces as tokens) so lines only break between
+    words, never mid-word — each word is a nowrap group of animated glyphs. */
+function toWords(text: string): { word: string; start: number }[] {
+  const out: { word: string; start: number }[] = [];
+  let i = 0;
+  for (const token of text.split(/(\s+)/)) {
+    // Keep real words only; spacing between them comes from the flex gap.
+    if (token.length && token.trim().length) out.push({ word: token, start: i });
+    i += token.length;
+  }
+  return out;
+}
+
 export default function ShutterText({
   text = "IMMERSE",
   trigger = "auto",
@@ -27,31 +40,21 @@ export default function ShutterText({
   ...props
 }: ShutterTextProps) {
   const [count, setCount] = useState(0);
-  const [active, setActive] = useState(
-    trigger === "auto" || trigger === "click" || trigger === "hover",
-  );
   const [animating, setAnimating] = useState(trigger === "auto");
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: false, amount: 0.5 });
-  const characters = text.split("");
+  const words = toWords(text);
 
-  // Handle scroll trigger
   useEffect(() => {
     if (trigger === "scroll" && isInView) {
-      setActive(true);
       setAnimating(true);
       setCount((c) => c + 1);
     }
-    if (trigger === "scroll" && !isInView) {
-      setActive(false);
-      setAnimating(false);
-    }
+    if (trigger === "scroll" && !isInView) setAnimating(false);
   }, [trigger, isInView]);
 
-  // Handle auto trigger – animate once on mount
   useEffect(() => {
     if (trigger === "auto") {
-      setActive(true);
       setAnimating(true);
       setCount((c) => c + 1);
     }
@@ -72,10 +75,71 @@ export default function ShutterText({
   }, [trigger]);
 
   const handleMouseLeave = useCallback(() => {
-    if (trigger === "hover") {
-      setAnimating(false);
-    }
+    if (trigger === "hover") setAnimating(false);
   }, [trigger]);
+
+  const renderChar = (char: string, i: number) => {
+    const glyph = char === " " ? " " : char;
+    if (!animating) {
+      return (
+        <span
+          key={i}
+          className={`inline-block font-black leading-none tracking-tighter ${baseClassName}`}
+        >
+          {glyph}
+        </span>
+      );
+    }
+    return (
+      <span key={i} className="relative inline-block overflow-hidden">
+        <motion.span
+          initial={{ opacity: 0, filter: "blur(10px)" }}
+          animate={{ opacity: 1, filter: "blur(0px)" }}
+          transition={{ delay: i * 0.04 + 0.3, duration: 0.8 }}
+          className={`inline-block font-black leading-none tracking-tighter ${baseClassName}`}
+        >
+          {glyph}
+        </motion.span>
+        <motion.span
+          initial={{ x: "-100%", opacity: 0 }}
+          animate={{ x: "100%", opacity: [0, 1, 0] }}
+          transition={{ duration: 0.7, delay: i * 0.04, ease: "easeInOut" }}
+          className={`pointer-events-none absolute inset-0 z-10 inline-block font-black leading-none ${accentClassName}`}
+          style={{ clipPath: "polygon(0 0, 100% 0, 100% 35%, 0 35%)" }}
+        >
+          {char}
+        </motion.span>
+        <motion.span
+          initial={{ x: "100%", opacity: 0 }}
+          animate={{ x: "-100%", opacity: [0, 1, 0] }}
+          transition={{ duration: 0.7, delay: i * 0.04 + 0.1, ease: "easeInOut" }}
+          className={`pointer-events-none absolute inset-0 z-10 inline-block font-black leading-none ${baseClassName}`}
+          style={{ clipPath: "polygon(0 35%, 100% 35%, 100% 65%, 0 65%)" }}
+        >
+          {char}
+        </motion.span>
+        <motion.span
+          initial={{ x: "-100%", opacity: 0 }}
+          animate={{ x: "100%", opacity: [0, 1, 0] }}
+          transition={{ duration: 0.7, delay: i * 0.04 + 0.2, ease: "easeInOut" }}
+          className={`pointer-events-none absolute inset-0 z-10 inline-block font-black leading-none ${accentClassName}`}
+          style={{ clipPath: "polygon(0 65%, 100% 65%, 100% 100%, 0 100%)" }}
+        >
+          {char}
+        </motion.span>
+      </span>
+    );
+  };
+
+  const content = (
+    <span className="flex flex-wrap items-center justify-center gap-x-[0.3em] gap-y-1">
+      {words.map(({ word, start }) => (
+        <span key={start} className="inline-flex whitespace-nowrap">
+          {word.split("").map((char, k) => renderChar(char, start + k))}
+        </span>
+      ))}
+    </span>
+  );
 
   return (
     <div
@@ -90,91 +154,11 @@ export default function ShutterText({
     >
       <AnimatePresence mode="wait">
         {animating ? (
-          <motion.span
-            key={count}
-            className="flex flex-wrap items-center justify-center"
-          >
-            {characters.map((char, i) => (
-              <span
-                key={i}
-                className="relative inline-block overflow-hidden px-[0.1vw]"
-              >
-                {/* Main Character */}
-                <motion.span
-                  initial={{ opacity: 0, filter: "blur(10px)" }}
-                  animate={{ opacity: 1, filter: "blur(0px)" }}
-                  transition={{ delay: i * 0.04 + 0.3, duration: 0.8 }}
-                  className={`inline-block font-black leading-none tracking-tighter ${baseClassName}`}
-                >
-                  {char === " " ? " " : char}
-                </motion.span>
-
-                {/* Top Slice Layer */}
-                <motion.span
-                  initial={{ x: "-100%", opacity: 0 }}
-                  animate={{ x: "100%", opacity: [0, 1, 0] }}
-                  transition={{
-                    duration: 0.7,
-                    delay: i * 0.04,
-                    ease: "easeInOut",
-                  }}
-                  className={`pointer-events-none absolute inset-0 z-10 inline-block font-black leading-none ${accentClassName}`}
-                  style={{ clipPath: "polygon(0 0, 100% 0, 100% 35%, 0 35%)" }}
-                >
-                  {char}
-                </motion.span>
-
-                {/* Middle Slice Layer */}
-                <motion.span
-                  initial={{ x: "100%", opacity: 0 }}
-                  animate={{ x: "-100%", opacity: [0, 1, 0] }}
-                  transition={{
-                    duration: 0.7,
-                    delay: i * 0.04 + 0.1,
-                    ease: "easeInOut",
-                  }}
-                  className={`pointer-events-none absolute inset-0 z-10 inline-block font-black leading-none ${baseClassName}`}
-                  style={{
-                    clipPath: "polygon(0 35%, 100% 35%, 100% 65%, 0 65%)",
-                  }}
-                >
-                  {char}
-                </motion.span>
-
-                {/* Bottom Slice Layer */}
-                <motion.span
-                  initial={{ x: "-100%", opacity: 0 }}
-                  animate={{ x: "100%", opacity: [0, 1, 0] }}
-                  transition={{
-                    duration: 0.7,
-                    delay: i * 0.04 + 0.2,
-                    ease: "easeInOut",
-                  }}
-                  className={`pointer-events-none absolute inset-0 z-10 inline-block font-black leading-none ${accentClassName}`}
-                  style={{
-                    clipPath: "polygon(0 65%, 100% 65%, 100% 100%, 0 100%)",
-                  }}
-                >
-                  {char}
-                </motion.span>
-              </span>
-            ))}
+          <motion.span key={count} className="contents">
+            {content}
           </motion.span>
         ) : (
-          <span className="flex flex-wrap items-center justify-center">
-            {characters.map((char, i) => (
-              <span
-                key={i}
-                className="relative inline-block overflow-hidden px-[0.1vw]"
-              >
-                <span
-                  className={`inline-block font-black leading-none tracking-tighter ${baseClassName}`}
-                >
-                  {char === " " ? " " : char}
-                </span>
-              </span>
-            ))}
-          </span>
+          content
         )}
       </AnimatePresence>
     </div>
