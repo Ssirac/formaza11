@@ -18,6 +18,7 @@ export const SIZE_GROUPS: SizeGroup[] = [
 export const STOCK_STATUSES = [
   { value: "in_stock", label: "Əldədir" },
   { value: "on_way", label: "Yoldadır" },
+  { value: "pre_order", label: "Sifarişlə" },
 ] as const;
 
 export type StockStatus = (typeof STOCK_STATUSES)[number]["value"];

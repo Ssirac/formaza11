@@ -19,6 +19,7 @@ import {
   updateCategory,
   deleteCategory,
   moveCategory,
+  seedSportCategories,
 } from "@/lib/actions/categories";
 import { ConfirmDialog } from "./confirm-dialog";
 import { inputClass } from "@/components/ui/field";
@@ -37,6 +38,22 @@ export function CategoryManager({
   const [savingId, setSavingId] = useState<string | null>(null);
   const [target, setTarget] = useState<AdminCategory | null>(null);
   const [deleting, startDelete] = useTransition();
+  const [seeding, startSeed] = useTransition();
+
+  function seedSports() {
+    startSeed(async () => {
+      const res = await seedSportCategories();
+      if (res.ok) {
+        const n = Number(res.id ?? 0);
+        toast.success(
+          n > 0 ? `${n} idman kateqoriyası əlavə olundu` : "Hamısı artıq mövcuddur"
+        );
+        router.refresh();
+      } else {
+        toast.error(res.error ?? "Xəta");
+      }
+    });
+  }
 
   function add() {
     if (!newName.trim()) return;
@@ -111,6 +128,27 @@ export function CategoryManager({
             <Plus className="h-4 w-4" />
           )}
           Əlavə et
+        </button>
+      </div>
+
+      {/* Quick add: other sports */}
+      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-surface/60 px-4 py-3">
+        <p className="text-sm text-muted">
+          Digər idman növləri (Basketbol, F1, UFC, Hokkey, Reqbi, Amerikan
+          futbolu):
+        </p>
+        <button
+          type="button"
+          onClick={seedSports}
+          disabled={seeding}
+          className={buttonClasses("outline", "sm")}
+        >
+          {seeding ? (
+            <LoaderCircle className="h-4 w-4 animate-spin" />
+          ) : (
+            <Plus className="h-4 w-4" />
+          )}
+          İdman kateqoriyalarını əlavə et
         </button>
       </div>
 

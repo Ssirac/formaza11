@@ -9,6 +9,7 @@ import type { ProductDTO } from "@/lib/types";
 import type { ProductPricing } from "@/lib/admin-data";
 import { SIZE_GROUPS, STOCK_STATUSES } from "@/lib/constants";
 import { createProduct, updateProduct } from "@/lib/actions/products";
+import { formatJerseyDescription } from "@/lib/jersey-description";
 import { slugify } from "@/lib/utils";
 import { ImageManager } from "./image-manager";
 import { Switch } from "./switch";
@@ -92,7 +93,7 @@ export function ProductForm({
       images,
       isFeatured,
       isHidden,
-      stockStatus: stockStatus as "in_stock" | "on_way",
+      stockStatus: stockStatus as "in_stock" | "on_way" | "pre_order",
       costPrice: strToNum(costPrice),
       shippingCost: strToNum(shippingCost),
       salePrice: strToNum(salePrice),
@@ -169,12 +170,25 @@ export function ProductForm({
             </select>
           </Field>
 
-          <Field label="Təsvir" htmlFor="description" hint="İstəyə bağlı.">
+          <Field
+            label="Təsvir"
+            htmlFor="description"
+            hint="İstəyə bağlı. Forma məlumat cədvəlini (Team / Season / Colors…) yapışdırsan, avtomatik formatlanır."
+          >
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Forma haqqında qısa məlumat…"
+              onPaste={(e) => {
+                const pasted = e.clipboardData.getData("text");
+                const formatted = formatJerseyDescription(pasted);
+                if (formatted) {
+                  e.preventDefault();
+                  setDescription(formatted);
+                  toast.success("Məlumat avtomatik formatlandı");
+                }
+              }}
+              placeholder="Forma haqqında qısa məlumat… (məlumat cədvəlini yapışdıra bilərsən)"
               className={textareaClass}
             />
           </Field>

@@ -18,7 +18,7 @@ const ProductInput = z.object({
   images: z.array(z.string().url()).default([]),
   isFeatured: z.boolean().default(false),
   isHidden: z.boolean().default(false),
-  stockStatus: z.enum(["in_stock", "on_way"]).default("in_stock"),
+  stockStatus: z.enum(["in_stock", "on_way", "pre_order"]).default("in_stock"),
   // Admin-only pricing (never shown on the public site).
   costPrice: price,
   shippingCost: price,

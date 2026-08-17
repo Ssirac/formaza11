@@ -54,6 +54,30 @@ export async function createCategory(input: {
   }
 }
 
+/** One-click add of the extra sport categories, skipping any that exist. */
+export async function seedSportCategories(): Promise<ActionResult> {
+  try {
+    await assertAdmin();
+    const names = ["Basketbol", "F1", "UFC", "Hokkey", "Reqbi", "Amerikan futbolu"];
+    let count = await prisma.category.count();
+    let added = 0;
+    for (const name of names) {
+      const slug = slugify(name) || "kateqoriya";
+      const exists = await prisma.category.findUnique({
+        where: { slug },
+        select: { id: true },
+      });
+      if (exists) continue;
+      await prisma.category.create({ data: { name, slug, order: ++count } });
+      added++;
+    }
+    revalidateAll();
+    return { ok: true, id: String(added) };
+  } catch (e) {
+    return { ok: false, error: errorMessage(e) };
+  }
+}
+
 export async function updateCategory(
   id: string,
   input: { name: string; order?: number }

@@ -85,7 +85,7 @@ export default async function ProductPage({ params }: { params: Params }) {
           </h1>
 
           {product.description && (
-            <p className="mt-4 text-base leading-relaxed text-muted">
+            <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-muted">
               {product.description}
             </p>
           )}
