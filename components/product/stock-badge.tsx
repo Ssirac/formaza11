@@ -4,10 +4,13 @@ import { cn } from "@/lib/utils";
 const STYLES: Record<string, { badge: string; dot: string }> = {
   in_stock: { badge: "border-pitch/40 bg-pitch/15 text-pitch", dot: "bg-pitch" },
   on_way: {
-    badge: "border-amber-400/40 bg-amber-400/10 text-amber-300",
-    dot: "bg-amber-300",
+    badge: "border-sky-400/40 bg-sky-400/10 text-sky-300",
+    dot: "bg-sky-300",
   },
-  pre_order: { badge: "border-gold/40 bg-gold/10 text-gold", dot: "bg-gold" },
+  pre_order: {
+    badge: "border-violet-400/40 bg-violet-400/10 text-violet-300",
+    dot: "bg-violet-300",
+  },
 };
 
 export function StockBadge({

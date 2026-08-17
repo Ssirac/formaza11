@@ -29,6 +29,9 @@ export function ProductCard({
   const hasSecond = product.images.length > 1;
   const primary = product.images[0];
   const secondary = product.images[1];
+  const isNew =
+    Date.now() - new Date(product.createdAt).getTime() <
+    14 * 24 * 60 * 60 * 1000;
 
   // Subtle 3D tilt
   const mx = useMotionValue(0);
@@ -120,8 +123,13 @@ export function ProductCard({
           {product.categoryName}
         </span>
         {product.isFeatured && (
-          <span className="absolute bottom-3 left-3 rounded-full bg-metal-gold px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-ink">
+          <span className="absolute bottom-3 left-3 rounded-full bg-metal-gold px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
             Seçilmiş
+          </span>
+        )}
+        {isNew && (
+          <span className="absolute bottom-3 right-3 rounded-full bg-pitch px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-lg">
+            Yeni
           </span>
         )}
       </Link>

@@ -1,5 +1,17 @@
 import Link from "next/link";
-import { Trophy, Flag, History, Baby, ArrowUpRight } from "lucide-react";
+import {
+  Trophy,
+  Flag,
+  History,
+  Baby,
+  ArrowUpRight,
+  Car,
+  Swords,
+  Snowflake,
+  Shield,
+  Zap,
+  Target,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { CategoryDTO } from "@/lib/types";
 import { Reveal } from "@/components/motion/reveal";
@@ -10,6 +22,12 @@ const ICONS: Record<string, LucideIcon> = {
   "milli-komandalar": Flag,
   retro: History,
   "usaq-destleri": Baby,
+  basketbol: Target,
+  f1: Car,
+  ufc: Swords,
+  hokkey: Snowflake,
+  reqbi: Shield,
+  "amerikan-futbolu": Zap,
 };
 
 export function CategoryGrid({ categories }: { categories: CategoryDTO[] }) {
