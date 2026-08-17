@@ -8,8 +8,8 @@ const STYLES: Record<string, { badge: string; dot: string }> = {
     dot: "bg-sky-300",
   },
   pre_order: {
-    badge: "border-violet-400/40 bg-violet-400/10 text-violet-300",
-    dot: "bg-violet-300",
+    badge: "border-red-500/40 bg-red-500/10 text-red-300",
+    dot: "bg-red-400",
   },
 };
 

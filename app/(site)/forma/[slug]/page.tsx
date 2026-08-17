@@ -10,6 +10,7 @@ import {
 import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductPurchase } from "@/components/product/product-purchase";
 import { StockBadge } from "@/components/product/stock-badge";
+import { findCrestForName } from "@/lib/crest-match";
 import { ProductGrid } from "@/components/product/product-grid";
 import { SectionHeading } from "@/components/home/section-heading";
 
@@ -41,6 +42,8 @@ export default async function ProductPage({ params }: { params: Params }) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) notFound();
+
+  const crest = findCrestForName(product.name);
 
   const [settings, similar] = await Promise.all([
     getSettings(),
@@ -83,6 +86,22 @@ export default async function ProductPage({ params }: { params: Params }) {
           <h1 className="mt-4 font-display text-3xl font-extrabold italic leading-tight text-cream sm:text-4xl">
             {product.name}
           </h1>
+
+          {crest && (
+            <Link
+              href={`/komanda/${crest.slug}`}
+              className="mt-4 inline-flex items-center gap-2.5 rounded-full border border-line bg-surface px-3 py-1.5 text-sm font-medium text-cream transition-colors hover:border-gold hover:text-gold"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={crest.src}
+                alt={crest.name}
+                className="h-7 w-7 object-contain"
+              />
+              {crest.name} formaları
+              <ChevronRight className="h-4 w-4 text-faint" />
+            </Link>
+          )}
 
           {product.description && (
             <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-muted">

@@ -22,22 +22,20 @@ import {
   getFeaturedProducts,
   getCategories,
   getMostViewedProducts,
+  getHeroImages,
 } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [settings, featured, categories, mostViewed] = await Promise.all([
-    getSettings(),
-    getFeaturedProducts(12),
-    getCategories(),
-    getMostViewedProducts(8),
-  ]);
-
-  const heroImages = featured
-    .flatMap((p) => p.images)
-    .filter(Boolean)
-    .slice(0, 12);
+  const [settings, featured, categories, mostViewed, heroImages] =
+    await Promise.all([
+      getSettings(),
+      getFeaturedProducts(12),
+      getCategories(),
+      getMostViewedProducts(8),
+      getHeroImages(16),
+    ]);
 
   return (
     <>

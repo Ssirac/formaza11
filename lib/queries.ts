@@ -90,6 +90,30 @@ function orderByFor(sort?: ProductSort): any {
   return [{ isFeatured: "desc" }, { createdAt: "desc" }];
 }
 
+/**
+ * One image per product (featured first, then newest) for the hero corridor —
+ * so it shows many DIFFERENT jerseys instead of one jersey's many angles.
+ */
+export async function getHeroImages(limit = 16): Promise<string[]> {
+  try {
+    const products = await prisma.product.findMany({
+      where: { isHidden: false },
+      orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
+      take: 60,
+      select: { images: true },
+    });
+    const out: string[] = [];
+    for (const p of products) {
+      const first = asStringArray(p.images)[0];
+      if (first) out.push(first);
+      if (out.length >= limit) break;
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
 export async function getVisibleProducts(opts?: {
   categorySlug?: string;
   q?: string;
