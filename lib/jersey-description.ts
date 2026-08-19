@@ -37,6 +37,22 @@ const TYPE_MAP: Record<string, string> = {
   fourth_kit: "Dördüncü forma",
 };
 
+// Short kit-type words used in the product NAME (e.g. "Real Madrid Ev 24/25").
+const TYPE_SHORT: Record<string, string> = {
+  home: "Ev",
+  away: "Səfər",
+  third: "Üçüncü",
+  fourth: "Dördüncü",
+  goalkeeper: "Qapıçı",
+  gk: "Qapıçı",
+  special: "Özəl",
+};
+
+const shortSeason = (full: string) => {
+  const m = full.match(/^(\d{4})\/(\d{2})$/);
+  return m ? `${m[1].slice(2)}/${m[2]}` : full;
+};
+
 const KEYS = [
   "team",
   "season",
@@ -101,7 +117,14 @@ function formatPlayers(raw: string): string {
   return s;
 }
 
+export type JerseyFromSheet = { name: string; description: string };
+
+/** Convenience wrapper kept for callers that only need the description. */
 export function formatJerseyDescription(raw: string): string | null {
+  return jerseyFromSheet(raw)?.description ?? null;
+}
+
+export function jerseyFromSheet(raw: string): JerseyFromSheet | null {
   if (!raw || !/team/i.test(raw)) return null;
 
   const lines = raw
@@ -171,5 +194,14 @@ export function formatJerseyDescription(raw: string): string | null {
 
   let out = `${title}\n\n${bullets.join("\n")}`;
   if (players) out += `\n\n⭐ Dövrün məşhur futbolçuları\n\n${players}`;
-  return out;
+
+  // Product name, e.g. "Real Madrid Ev 24/25".
+  const typeShort = typeRaw
+    ? TYPE_SHORT[typeRaw.toLowerCase()] ?? cap(typeRaw)
+    : "";
+  const name = [team, typeShort, season ? shortSeason(season) : ""]
+    .filter(Boolean)
+    .join(" ");
+
+  return { name, description: out };
 }

@@ -9,7 +9,7 @@ import type { ProductDTO } from "@/lib/types";
 import type { ProductPricing } from "@/lib/admin-data";
 import { SIZE_GROUPS, STOCK_STATUSES } from "@/lib/constants";
 import { createProduct, updateProduct } from "@/lib/actions/products";
-import { formatJerseyDescription } from "@/lib/jersey-description";
+import { jerseyFromSheet } from "@/lib/jersey-description";
 import { slugify } from "@/lib/utils";
 import { ImageManager } from "./image-manager";
 import { Switch } from "./switch";
@@ -181,11 +181,13 @@ export function ProductForm({
               onChange={(e) => setDescription(e.target.value)}
               onPaste={(e) => {
                 const pasted = e.clipboardData.getData("text");
-                const formatted = formatJerseyDescription(pasted);
-                if (formatted) {
+                const parsed = jerseyFromSheet(pasted);
+                if (parsed) {
                   e.preventDefault();
-                  setDescription(formatted);
-                  toast.success("Məlumat avtomatik formatlandı");
+                  setDescription(parsed.description);
+                  // Auto-fill the name (and, in turn, the slug) when empty.
+                  if (!name.trim() && parsed.name) setName(parsed.name);
+                  toast.success("Məlumat avtomatik dolduruldu");
                 }
               }}
               placeholder="Forma haqqında qısa məlumat… (məlumat cədvəlini yapışdıra bilərsən)"
