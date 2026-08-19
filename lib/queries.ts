@@ -10,7 +10,7 @@ function toProductDTO(p: any): ProductDTO {
     id: p.id,
     slug: p.slug,
     name: p.name,
-    description: p.description ?? "",
+    description: (p.description ?? "").replace(/^[*•]\s+/gm, ""),
     images: asStringArray(p.images),
     sizes: asStringArray(p.sizes),
     categoryId: p.categoryId,
