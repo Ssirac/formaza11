@@ -120,6 +120,23 @@ function formatPlayers(raw: string): string {
 
 export type JerseyFromSheet = { name: string; description: string };
 
+/**
+ * Rebuild the product name from an already-formatted description (the
+ * "🏟️ Komanda: … / 📅 Sezon: … / 👕 Növ: …" bullets). Returns null when the
+ * description isn't a formatted spec sheet, so such products are left untouched.
+ */
+export function deriveNameFromDescription(desc: string): string | null {
+  if (!desc) return null;
+  const grab = (re: RegExp) => desc.match(re)?.[1]?.trim() ?? "";
+  const team = grab(/Komanda:\s*(.+)/);
+  if (!team) return null;
+  const typeShort = grab(/Növ:\s*(.+)/)
+    .replace(/\s*forma(sı)?\s*$/i, "")
+    .trim();
+  const season = shortSeason(grab(/Sezon:\s*(.+)/));
+  return [team, typeShort, season].filter(Boolean).join(" ");
+}
+
 /** Convenience wrapper kept for callers that only need the description. */
 export function formatJerseyDescription(raw: string): string | null {
   return jerseyFromSheet(raw)?.description ?? null;

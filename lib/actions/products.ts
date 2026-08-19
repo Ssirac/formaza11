@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { assertAdmin } from "@/lib/session";
 import { slugify } from "@/lib/utils";
 import { uploadImage, isCloudinaryConfigured } from "@/lib/cloudinary";
+import { deriveNameFromDescription } from "@/lib/jersey-description";
 
 const price = z.number().nonnegative().nullable().optional();
 
@@ -108,6 +109,34 @@ export async function updateProduct(
     });
     revalidateAll(slug);
     return { ok: true, id };
+  } catch (e) {
+    return { ok: false, error: errorMessage(e) };
+  }
+}
+
+/**
+ * Rebuild every product's name from its formatted description. Slugs (and thus
+ * URLs) are left untouched. Products without a spec-sheet description are skipped.
+ */
+export async function renameAllFromDescriptions(): Promise<ActionResult> {
+  try {
+    await assertAdmin();
+    const products = await prisma.product.findMany({
+      select: { id: true, name: true, description: true },
+    });
+    let updated = 0;
+    for (const p of products) {
+      const next = deriveNameFromDescription(p.description ?? "");
+      if (next && next !== p.name) {
+        await prisma.product.update({
+          where: { id: p.id },
+          data: { name: next },
+        });
+        updated++;
+      }
+    }
+    revalidateAll();
+    return { ok: true, id: String(updated) };
   } catch (e) {
     return { ok: false, error: errorMessage(e) };
   }

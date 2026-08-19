@@ -4,6 +4,7 @@ import { getAdminProducts, getAdminCategories } from "@/lib/admin-data";
 import { PageHeader } from "@/components/admin/page-header";
 import { ProductFilters } from "@/components/admin/product-filters";
 import { ProductTable } from "@/components/admin/product-table";
+import { BulkRenameButton } from "@/components/admin/bulk-rename-button";
 import { buttonClasses } from "@/components/ui/button";
 
 export const dynamic = "force-dynamic";
@@ -32,13 +33,16 @@ export default async function AdminProductsPage({
         title="Məhsullar"
         description={`${products.length} məhsul göstərilir.`}
         action={
-          <Link
-            href="/admin/mehsullar/yeni"
-            className={buttonClasses("gold", "md")}
-          >
-            <Plus className="h-4 w-4" />
-            Yeni məhsul
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <BulkRenameButton />
+            <Link
+              href="/admin/mehsullar/yeni"
+              className={buttonClasses("gold", "md")}
+            >
+              <Plus className="h-4 w-4" />
+              Yeni məhsul
+            </Link>
+          </div>
         }
       />
       <ProductFilters categories={categories} />
