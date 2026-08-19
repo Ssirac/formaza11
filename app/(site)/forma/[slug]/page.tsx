@@ -45,6 +45,21 @@ export default async function ProductPage({ params }: { params: Params }) {
 
   const crest = findCrestForName(product.name);
 
+  // Strip any legacy "* " / "• " bullet markers so older descriptions render clean.
+  const cleanDescription = product.description.replace(/^[*•]\s+/gm, "");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: product.images,
+    description:
+      cleanDescription || `${product.name} — ${product.categoryName} forması.`,
+    category: product.categoryName,
+    sku: product.slug,
+    brand: { "@type": "Brand", name: "FORMAZA11" },
+  };
+
   const [settings, similar] = await Promise.all([
     getSettings(),
     getSimilarProducts(product.categoryId, product.id, 4),
@@ -52,6 +67,10 @@ export default async function ProductPage({ params }: { params: Params }) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-28 pt-8 sm:px-6 lg:px-8 lg:pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Breadcrumb */}
       <nav
         aria-label="breadcrumb"
@@ -103,9 +122,9 @@ export default async function ProductPage({ params }: { params: Params }) {
             </Link>
           )}
 
-          {product.description && (
+          {cleanDescription && (
             <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-muted">
-              {product.description}
+              {cleanDescription}
             </p>
           )}
 

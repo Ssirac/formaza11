@@ -34,6 +34,7 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
   heroTitle: "OYUN\nSƏNİN\nRƏNGLƏRİNDƏ",
   heroSubtitle:
     "Klub, milli komanda, retro və uşaq formaları. Orijinala sadiq keyfiyyət — qiymət və sifariş üçün WhatsApp-da yaz.",
+  campaignText: "",
 };
 
 export const SETTING_KEYS = Object.keys(DEFAULT_SETTINGS);

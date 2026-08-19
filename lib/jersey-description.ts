@@ -19,6 +19,11 @@ const COLOR_MAP: Record<string, { az: string; emoji: string }> = {
   grey: { az: "Boz", emoji: "⚪" },
   gray: { az: "Boz", emoji: "⚪" },
   pink: { az: "Çəhrayı", emoji: "🩷" },
+  "sky blue": { az: "Göy", emoji: "🔵" },
+  "light blue": { az: "Açıq mavi", emoji: "🔵" },
+  "dark blue": { az: "Tünd mavi", emoji: "🔵" },
+  "royal blue": { az: "Mavi", emoji: "🔵" },
+  "navy blue": { az: "Tünd mavi", emoji: "🔵" },
 };
 
 const TYPE_MAP: Record<string, string> = {
@@ -28,6 +33,8 @@ const TYPE_MAP: Record<string, string> = {
   fourth: "Dördüncü forma",
   goalkeeper: "Qapıçı forması",
   gk: "Qapıçı forması",
+  special: "Özəl forma",
+  fourth_kit: "Dördüncü forma",
 };
 
 const KEYS = [
@@ -133,14 +140,15 @@ export function formatJerseyDescription(raw: string): string | null {
   const seasonRaw = map.season?.[0]?.trim() ?? "";
   const season = seasonRaw ? normalizeSeason(seasonRaw) : "";
   const typeRaw = map.type?.[0]?.trim() ?? "";
-  const typeAz = TYPE_MAP[typeRaw.toLowerCase()] ?? "";
+  const typeAz = typeRaw ? TYPE_MAP[typeRaw.toLowerCase()] ?? cap(typeRaw) : "";
   const design = map.design?.[0]?.trim() ?? "";
   const colorsRaw = map.colors?.[0]?.trim() ?? "";
   const { emoji: colorEmoji, az: colorsAz } = colorsRaw
     ? parseColors(colorsRaw)
     : { emoji: "", az: "" };
   const brand = map.brand?.[0]?.trim() ?? "";
-  const sponsor = map.sponsor?.[0]?.trim() ?? "";
+  const sponsorRaw = map.sponsor?.[0]?.trim() ?? "";
+  const sponsor = /^[-–—]+$/.test(sponsorRaw) ? "" : sponsorRaw;
   const champions = (map.competitions ?? [])
     .filter((c) => /champion/i.test(c))
     .map((c) => c.replace(/\s*\(\s*champion\s*\)/i, "").trim());
@@ -148,19 +156,18 @@ export function formatJerseyDescription(raw: string): string | null {
 
   const y = firstYear(seasonRaw);
   const retro = y !== null && y <= 2015 ? " Retro" : "";
-  const titleType = typeRaw ? ` — ${cap(typeRaw)}` : "";
+  const titleType = typeAz ? ` — ${typeAz}` : "";
   const prefix = colorEmoji ? `${colorEmoji} ` : "";
   const title = `${prefix}${team}${season ? ` ${season}` : ""}${retro}${titleType}`;
 
-  const bullets: string[] = [`* 🏟️ Komanda: ${team}`];
-  if (season) bullets.push(`* 📅 Sezon: ${season}`);
-  if (typeRaw)
-    bullets.push(`* 👕 Növ: ${cap(typeRaw)}${typeAz ? ` / ${typeAz}` : ""}`);
-  if (design) bullets.push(`* 🎨 Dizayn: ${design}`);
-  if (colorsAz) bullets.push(`* ${colorEmoji} Rənglər: ${colorsAz}`);
-  if (brand) bullets.push(`* 👕 Brend: ${brand}`);
-  if (sponsor) bullets.push(`* 🏷️ Sponsor: ${sponsor}`);
-  for (const ch of champions) bullets.push(`* 🏆 ${ch} — Çempion`);
+  const bullets: string[] = [`🏟️ Komanda: ${team}`];
+  if (season) bullets.push(`📅 Sezon: ${season}`);
+  if (typeAz) bullets.push(`👕 Növ: ${typeAz}`);
+  if (design) bullets.push(`🎨 Dizayn: ${design}`);
+  if (colorsAz) bullets.push(`${colorEmoji} Rənglər: ${colorsAz}`);
+  if (brand) bullets.push(`👕 Brend: ${brand}`);
+  if (sponsor) bullets.push(`🏷️ Sponsor: ${sponsor}`);
+  for (const ch of champions) bullets.push(`🏆 ${ch} — Çempion`);
 
   let out = `${title}\n\n${bullets.join("\n")}`;
   if (players) out += `\n\n⭐ Dövrün məşhur futbolçuları\n\n${players}`;

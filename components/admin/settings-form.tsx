@@ -21,6 +21,7 @@ export function SettingsForm({
     tiktokUrl: settings.tiktokUrl ?? "",
     heroTitle: settings.heroTitle ?? "",
     heroSubtitle: settings.heroSubtitle ?? "",
+    campaignText: settings.campaignText ?? "",
   });
 
   function set<K extends keyof typeof form>(k: K, v: string) {
@@ -101,6 +102,25 @@ export function SettingsForm({
             value={form.heroSubtitle}
             onChange={(e) => set("heroSubtitle", e.target.value)}
             className={textareaClass}
+          />
+        </Field>
+      </div>
+
+      <div className="space-y-5 rounded-2xl border border-line bg-surface p-6">
+        <h3 className="font-display text-lg font-bold italic text-cream">
+          Kampaniya banneri
+        </h3>
+        <Field
+          label="Kampaniya mətni"
+          htmlFor="cmp"
+          hint="Doldurulsa, saytın ən üstündə vurğulanmış zolaq kimi görünür. Boş buraxsan, gizlənir."
+        >
+          <input
+            id="cmp"
+            value={form.campaignText}
+            onChange={(e) => set("campaignText", e.target.value)}
+            placeholder="Məs: Bu həftə bütün retro formalara endirim!"
+            className={inputClass}
           />
         </Field>
       </div>
