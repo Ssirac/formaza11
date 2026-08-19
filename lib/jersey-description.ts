@@ -48,6 +48,11 @@ const TYPE_SHORT: Record<string, string> = {
   special: "Özəl",
 };
 
+const shortSeason = (full: string) => {
+  const m = full.match(/^(\d{4})\/(\d{2})$/);
+  return m ? `${m[1].slice(2)}/${m[2]}` : full;
+};
+
 
 const KEYS = [
   "team",
@@ -191,11 +196,13 @@ export function jerseyFromSheet(raw: string): JerseyFromSheet | null {
   let out = `${title}\n\n${bullets.join("\n")}`;
   if (players) out += `\n\n⭐ Dövrün məşhur futbolçuları\n\n${players}`;
 
-  // Product name, e.g. "Real Madrid Ev" (kit type, no season).
+  // Product name, e.g. "Real Madrid Ev 24/25".
   const typeShort = typeRaw
     ? TYPE_SHORT[typeRaw.toLowerCase()] ?? cap(typeRaw)
     : "";
-  const name = [team, typeShort].filter(Boolean).join(" ");
+  const name = [team, typeShort, season ? shortSeason(season) : ""]
+    .filter(Boolean)
+    .join(" ");
 
   return { name, description: out };
 }
