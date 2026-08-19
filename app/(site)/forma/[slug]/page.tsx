@@ -26,13 +26,18 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return { title: "Forma tapılmadı" };
+  const desc =
+    product.description
+      .replace(/^[*•]\s+/gm, "")
+      .replace(/\s*\n+\s*/g, " ")
+      .trim()
+      .slice(0, 200) || `${product.name} — ${product.categoryName} forması.`;
   return {
     title: product.name,
-    description:
-      product.description || `${product.name} — ${product.categoryName} forması.`,
+    description: desc,
     openGraph: {
       title: product.name,
-      description: product.description || product.categoryName,
+      description: desc,
       images: product.images.slice(0, 1),
     },
   };
