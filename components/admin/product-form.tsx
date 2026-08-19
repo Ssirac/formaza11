@@ -133,7 +133,7 @@ export function ProductForm({
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Məs: Real Madrid Ev 24/25"
+              placeholder="Məs: Real Madrid Ev"
               className={inputClass}
             />
           </Field>
