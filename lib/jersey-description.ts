@@ -130,9 +130,12 @@ export function deriveNameFromDescription(desc: string): string | null {
   const grab = (re: RegExp) => desc.match(re)?.[1]?.trim() ?? "";
   const team = grab(/Komanda:\s*(.+)/);
   if (!team) return null;
-  const typeShort = grab(/Növ:\s*(.+)/)
-    .replace(/\s*forma(sı)?\s*$/i, "")
-    .trim();
+  // Type may be legacy "Away / Səfər forması" — keep only the Azerbaijani part,
+  // and map any leftover English word (Away/Third/…) to its short AZ form.
+  let t = grab(/Növ:\s*(.+)/);
+  if (t.includes("/")) t = t.split("/").pop()!.trim();
+  t = t.replace(/\s*forma(sı)?\s*$/i, "").trim();
+  const typeShort = TYPE_SHORT[t.toLowerCase()] ?? t;
   const season = shortSeason(grab(/Sezon:\s*(.+)/));
   return [team, typeShort, season].filter(Boolean).join(" ");
 }
