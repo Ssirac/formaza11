@@ -9,7 +9,13 @@ import type { ProductDTO } from "@/lib/types";
 import type { ProductPricing } from "@/lib/admin-data";
 import { SIZE_GROUPS, STOCK_STATUSES } from "@/lib/constants";
 import { createProduct, updateProduct } from "@/lib/actions/products";
-import { jerseyFromSheet } from "@/lib/jersey-description";
+import {
+  jerseyFromSheet,
+  deriveNameFromDescription,
+  readKitType,
+  withKitType,
+  KIT_TYPES,
+} from "@/lib/jersey-description";
 import { slugify } from "@/lib/utils";
 import { ImageManager } from "./image-manager";
 import { Switch } from "./switch";
@@ -48,6 +54,19 @@ export function ProductForm({
     initial?.categoryId ?? categories[0]?.id ?? ""
   );
   const [description, setDescription] = useState(initial?.description ?? "");
+  const [kitType, setKitType] = useState(() =>
+    readKitType(initial?.description ?? "")
+  );
+
+  function changeKitType(t: string) {
+    setKitType(t);
+    if (t && description) {
+      const nd = withKitType(description, t);
+      setDescription(nd);
+      const nn = deriveNameFromDescription(nd);
+      if (nn) setName(nn);
+    }
+  }
   const [sizes, setSizes] = useState<string[]>(initial?.sizes ?? []);
   const [images, setImages] = useState<string[]>(initial?.images ?? []);
   const [isFeatured, setIsFeatured] = useState(initial?.isFeatured ?? false);
@@ -185,6 +204,7 @@ export function ProductForm({
                 if (parsed) {
                   e.preventDefault();
                   setDescription(parsed.description);
+                  setKitType(readKitType(parsed.description));
                   // Auto-fill the name (and, in turn, the slug) when empty.
                   if (!name.trim() && parsed.name) setName(parsed.name);
                   toast.success("Məlumat avtomatik dolduruldu");
@@ -193,6 +213,26 @@ export function ProductForm({
               placeholder="Forma haqqında qısa məlumat… (məlumat cədvəlini yapışdıra bilərsən)"
               className={textareaClass}
             />
+          </Field>
+
+          <Field
+            label="Növ (forma növü)"
+            htmlFor="kit"
+            hint="Cədvəl yapışdıranda avtomatik seçilir; buradan dəyişə bilərsən (təsvir və ad da yenilənir)."
+          >
+            <select
+              id="kit"
+              value={kitType}
+              onChange={(e) => changeKitType(e.target.value)}
+              className={selectClass}
+            >
+              <option value="">Seçilməyib</option>
+              {KIT_TYPES.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
           </Field>
         </div>
 

@@ -120,6 +120,33 @@ function formatPlayers(raw: string): string {
 
 export type JerseyFromSheet = { name: string; description: string };
 
+/** Kit types offered in the admin "Növ" dropdown. */
+export const KIT_TYPES = [
+  "Ev forması",
+  "Səfər forması",
+  "Üçüncü forma",
+  "Dördüncü forma",
+  "Qapıçı forması",
+  "Özəl forma",
+] as const;
+
+/** Read the kit type currently written in a formatted description. */
+export function readKitType(desc: string): string {
+  const raw = desc.match(/Növ:\s*(.+)/)?.[1]?.trim() ?? "";
+  const az = raw.includes("/") ? raw.split("/").pop()!.trim() : raw;
+  return (KIT_TYPES as readonly string[]).includes(az) ? az : "";
+}
+
+/** Rewrite the kit type inside a formatted description (Növ line + title). */
+export function withKitType(desc: string, typeAz: string): string {
+  if (!desc) return desc;
+  let out = desc.replace(/(Növ:\s*)[^\n]*/, `$1${typeAz}`);
+  const nl = out.indexOf("\n");
+  const first = nl === -1 ? out : out.slice(0, nl);
+  const rest = nl === -1 ? "" : out.slice(nl);
+  return first.replace(/ — [^\n]*$/, ` — ${typeAz}`) + rest;
+}
+
 /**
  * Rebuild the product name from an already-formatted description (the
  * "🏟️ Komanda: … / 📅 Sezon: … / 👕 Növ: …" bullets). Returns null when the
