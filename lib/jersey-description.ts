@@ -120,7 +120,7 @@ function formatPlayers(raw: string): string {
 
 export type JerseyFromSheet = { name: string; description: string };
 
-/** Kit types offered in the admin "Növ" dropdown. */
+/** Kit types offered in the admin "Növ" dropdown (football default). */
 export const KIT_TYPES = [
   "Ev forması",
   "Səfər forması",
@@ -130,11 +130,35 @@ export const KIT_TYPES = [
   "Özəl forma",
 ] as const;
 
+/**
+ * "Növ" options per category (by slug). Football-style categories fall back to
+ * KIT_TYPES; sports/accessories get their own relevant option lists.
+ */
+const KIT_TYPES_BY_CATEGORY: Record<string, readonly string[]> = {
+  basketbol: ["Ev forması", "Səfər forması", "Şəhər (City)", "Özəl forma"],
+  ufc: ["Çıxış forması", "Rashguard", "Köynək", "Şort", "Özəl"],
+  f1: ["Komanda köynəyi", "Polo", "Hudi", "Özəl"],
+  hokkey: ["Ev forması", "Səfər forması", "Üçüncü forma", "Özəl forma"],
+  reqbi: ["Ev forması", "Səfər forması", "Özəl forma"],
+  aksesuar: ["Şərf", "Papaq", "Çanta", "Corab", "Əlcək", "Digər"],
+};
+
+/** Options to show in the admin "Növ" dropdown for a given category slug. */
+export function kitTypesForCategory(slug?: string): readonly string[] {
+  return (slug && KIT_TYPES_BY_CATEGORY[slug]) || KIT_TYPES;
+}
+
 /** Read the kit type currently written in a formatted description. */
 export function readKitType(desc: string): string {
   const raw = desc.match(/Növ:\s*(.+)/)?.[1]?.trim() ?? "";
   const az = raw.includes("/") ? raw.split("/").pop()!.trim() : raw;
-  return (KIT_TYPES as readonly string[]).includes(az) ? az : "";
+  if (!az) return "";
+  // Accept any known option across every category, not just football.
+  const all = new Set<string>([
+    ...KIT_TYPES,
+    ...Object.values(KIT_TYPES_BY_CATEGORY).flat(),
+  ]);
+  return all.has(az) ? az : "";
 }
 
 /** Rewrite the kit type inside a formatted description (Növ line + title). */

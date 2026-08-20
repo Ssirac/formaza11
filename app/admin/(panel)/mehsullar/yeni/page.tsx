@@ -13,7 +13,7 @@ export default async function NewProductPage() {
         description="Kataloqa yeni forma əlavə et."
       />
       <ProductForm
-        categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+        categories={categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug }))}
       />
     </div>
   );

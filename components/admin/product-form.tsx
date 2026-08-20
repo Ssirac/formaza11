@@ -14,7 +14,7 @@ import {
   deriveNameFromDescription,
   readKitType,
   withKitType,
-  KIT_TYPES,
+  kitTypesForCategory,
 } from "@/lib/jersey-description";
 import { slugify } from "@/lib/utils";
 import { ImageManager } from "./image-manager";
@@ -23,7 +23,7 @@ import { Field, inputClass, textareaClass, selectClass } from "@/components/ui/f
 import { buttonClasses } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-type Category = { id: string; name: string };
+type Category = { id: string; name: string; slug?: string };
 
 const numToStr = (n: number | null | undefined) =>
   n === null || n === undefined ? "" : String(n);
@@ -227,7 +227,9 @@ export function ProductForm({
               className={selectClass}
             >
               <option value="">Seçilməyib</option>
-              {KIT_TYPES.map((t) => (
+              {kitTypesForCategory(
+                categories.find((c) => c.id === categoryId)?.slug
+              ).map((t) => (
                 <option key={t} value={t}>
                   {t}
                 </option>

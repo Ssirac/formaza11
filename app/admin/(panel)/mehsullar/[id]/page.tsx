@@ -21,7 +21,7 @@ export default async function EditProductPage({
     <div>
       <PageHeader title="Məhsulu redaktə et" description={product.name} />
       <ProductForm
-        categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+        categories={categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug }))}
         initial={product}
         initialPricing={product.pricing}
       />
