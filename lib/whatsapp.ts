@@ -45,12 +45,13 @@ export function buildWhatsAppUrl(
   size: string,
   productUrl?: string,
   phone?: string,
-  price?: number | null,
+  _price?: number | null,
   categorySlug?: string
 ): string {
   const number = normalizePhone(rawNumber);
+  // Customer-facing redirect never shows the price — it is negotiated on WhatsApp.
   const text = encodeURIComponent(
-    buildWhatsAppMessage(productName, size, productUrl, phone, price, categorySlug)
+    buildWhatsAppMessage(productName, size, productUrl, phone, null, categorySlug)
   );
   return `https://wa.me/${number}?text=${text}`;
 }
