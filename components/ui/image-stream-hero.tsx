@@ -135,7 +135,10 @@ export function ImageStreamHero({
                     <img
                       src={cloudinaryLoader({ src: img.src, width: 300 })}
                       alt={img.alt ?? ""}
-                      loading="lazy"
+                      // The hero is the LCP region — load its images eagerly so
+                      // the largest paint lands early instead of streaming in.
+                      loading="eager"
+                      fetchPriority={i < 3 ? "high" : "auto"}
                       decoding="async"
                       className="h-full w-full object-cover"
                       draggable={false}
