@@ -18,6 +18,7 @@ export function ProductPurchase({
   sizes,
   whatsappNumber,
   salePrice,
+  categorySlug,
 }: {
   productId: string;
   slug: string;
@@ -26,6 +27,7 @@ export function ProductPurchase({
   sizes: string[];
   whatsappNumber: string;
   salePrice?: number | null;
+  categorySlug?: string;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
@@ -68,6 +70,7 @@ export function ProductPurchase({
       slug,
       phone,
       price: salePrice,
+      categorySlug,
     });
   }
 

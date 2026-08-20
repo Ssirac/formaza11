@@ -39,6 +39,24 @@ export const DEFAULT_SETTINGS: Record<string, string> = {
 
 export const SETTING_KEYS = Object.keys(DEFAULT_SETTINGS);
 
+/** Emoji matching a product category (by slug). Defaults to a jersey. */
+const CATEGORY_EMOJI: Record<string, string> = {
+  klublar: "⚽",
+  "milli-komandalar": "🏆",
+  retro: "👕",
+  "usaq-destleri": "🧒",
+  basketbol: "🏀",
+  f1: "🏎️",
+  ufc: "🥊",
+  hokkey: "🏒",
+  reqbi: "🏉",
+  "amerikan-futbolu": "🏈",
+};
+
+export function categoryEmoji(slug?: string): string {
+  return (slug && CATEGORY_EMOJI[slug]) || "👕";
+}
+
 export const MARQUEE_ITEMS = [
   "KLUBLAR",
   "MİLLİ KOMANDALAR",

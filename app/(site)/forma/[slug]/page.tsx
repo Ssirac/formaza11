@@ -142,6 +142,7 @@ export default async function ProductPage({ params }: { params: Params }) {
               sizes={product.sizes}
               whatsappNumber={settings.whatsappNumber}
               salePrice={product.salePrice}
+              categorySlug={product.categorySlug}
             />
           </div>
         </div>

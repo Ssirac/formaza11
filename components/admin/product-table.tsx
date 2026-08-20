@@ -126,7 +126,8 @@ function ProductRow({
       "—",
       undefined,
       undefined,
-      product.salePrice
+      product.salePrice,
+      product.categorySlug
     );
     try {
       await navigator.clipboard.writeText(msg);

@@ -1,16 +1,20 @@
 // Framework-agnostic WhatsApp helpers — safe to import on client & server.
 
+import { categoryEmoji } from "@/lib/constants";
+
 export function buildWhatsAppMessage(
   productName: string,
   size: string,
   productUrl?: string,
   phone?: string,
-  price?: number | null
+  price?: number | null,
+  categorySlug?: string
 ): string {
+  const emoji = categoryEmoji(categorySlug);
   let msg =
     price != null && price > 0
-      ? `Salam 👋🏼 ${productName} formasının qiyməti ${price} AZN-dir. 👕`
-      : `Salam 👋🏼 ${productName} forması. 👕`;
+      ? `Salam 👋🏼 ${productName} formasının qiyməti ${price} AZN-dir. ${emoji}`
+      : `Salam 👋🏼 ${productName} forması. ${emoji}`;
   msg +=
     size && size !== "—"
       ? `\nSeçdiyim ölçü: ${size} 📦`
@@ -30,11 +34,12 @@ export function buildWhatsAppUrl(
   size: string,
   productUrl?: string,
   phone?: string,
-  price?: number | null
+  price?: number | null,
+  categorySlug?: string
 ): string {
   const number = normalizePhone(rawNumber);
   const text = encodeURIComponent(
-    buildWhatsAppMessage(productName, size, productUrl, phone, price)
+    buildWhatsAppMessage(productName, size, productUrl, phone, price, categorySlug)
   );
   return `https://wa.me/${number}?text=${text}`;
 }
