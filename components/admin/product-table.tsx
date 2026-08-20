@@ -56,9 +56,8 @@ export function ProductTable({ products }: { products: AdminProductListItem[] })
     <>
       <div className="overflow-hidden rounded-2xl border border-line bg-surface">
         {/* header (desktop) */}
-        <div className="hidden grid-cols-[1fr_96px_128px_72px_72px_48px_96px_80px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
+        <div className="hidden grid-cols-[1fr_128px_76px_76px_52px_100px_84px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
           <span>Məhsul</span>
-          <span>Kateqoriya</span>
           <span>Stok</span>
           <span className="text-center">Seçilmiş</span>
           <span className="text-center">Gizli</span>
@@ -150,7 +149,7 @@ function ProductRow({
   }
 
   return (
-    <li className="grid grid-cols-1 gap-4 px-5 py-4 lg:grid-cols-[1fr_96px_128px_72px_72px_48px_96px_80px] lg:items-center">
+    <li className="grid grid-cols-1 gap-4 px-5 py-4 lg:grid-cols-[1fr_128px_76px_76px_52px_100px_84px] lg:items-center">
       {/* product */}
       <div className="flex items-center gap-3">
         <div className="relative h-14 w-11 shrink-0 overflow-hidden rounded-lg border border-line bg-ink-2">
@@ -176,16 +175,11 @@ function ProductRow({
             {product.name}
           </Link>
           <p className="truncate text-xs text-faint">/{product.slug}</p>
-          <p className="mt-0.5 text-xs text-muted lg:hidden">
+          <p className="mt-0.5 text-xs text-muted">
             {product.categoryName} · {product.sizes.length} ölçü
           </p>
         </div>
       </div>
-
-      {/* category (desktop) */}
-      <span className="hidden truncate text-sm text-muted lg:block">
-        {product.categoryName}
-      </span>
 
       {/* stock status */}
       <div className="flex items-center gap-2">
@@ -195,12 +189,12 @@ function ProductRow({
           onChange={(e) => changeStock(e.target.value)}
           disabled={busy}
           className={cn(
-            "h-9 w-full rounded-lg border bg-ink-2 px-2 text-xs font-semibold outline-none transition-colors disabled:opacity-50",
+            "h-9 w-full rounded-lg border border-line-strong bg-ink-2 px-2 text-xs font-semibold outline-none transition-colors hover:border-gold/50 disabled:opacity-50",
             stock === "in_stock"
-              ? "border-pitch/40 text-pitch"
+              ? "text-pitch"
               : stock === "on_way"
-                ? "border-sky-400/40 text-sky-300"
-                : "border-red-500/40 text-red-300"
+                ? "text-sky-400"
+                : "text-red-400"
           )}
         >
           {STOCK_STATUSES.map((s) => (
