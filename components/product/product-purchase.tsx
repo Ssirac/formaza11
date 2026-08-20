@@ -27,6 +27,7 @@ export function ProductPurchase({
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [qty, setQty] = useState(1);
+  const [phone, setPhone] = useState("");
   const [shake, setShake] = useState(false);
   const [tip, setTip] = useState(false);
 
@@ -63,6 +64,7 @@ export function ProductPurchase({
       size: selected ?? "—",
       whatsappNumber,
       slug,
+      phone,
     });
   }
 
@@ -114,6 +116,26 @@ export function ProductPurchase({
               <Plus className="h-4 w-4" />
             </button>
           </div>
+        </div>
+
+        {/* Optional contact number — logged with the order */}
+        <div>
+          <label
+            htmlFor="order-phone"
+            className="mb-2 block text-sm font-semibold text-cream"
+          >
+            Nömrəniz{" "}
+            <span className="font-normal text-faint">(istəyə bağlı)</span>
+          </label>
+          <input
+            id="order-phone"
+            type="tel"
+            inputMode="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+994 __ ___ __ __"
+            className="w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm text-cream outline-none transition-colors focus:border-gold"
+          />
         </div>
 
         <div className="relative space-y-3">

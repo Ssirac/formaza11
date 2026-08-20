@@ -58,9 +58,10 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-line bg-surface">
-        <div className="hidden grid-cols-[1fr_84px_100px_150px_56px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
+        <div className="hidden grid-cols-[1fr_70px_130px_92px_128px_52px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
           <span>Forma</span>
           <span className="text-center">Ölçü</span>
+          <span>Nömrə</span>
           <span className="text-right">Qiymət (₼)</span>
           <span className="text-right">Tarix</span>
           <span className="text-right">Sil</span>
@@ -69,7 +70,7 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
           {leads.map((l) => (
             <li
               key={l.id}
-              className="grid grid-cols-1 gap-2 px-5 py-4 lg:grid-cols-[1fr_84px_100px_150px_56px] lg:items-center"
+              className="grid grid-cols-1 gap-2 px-5 py-4 lg:grid-cols-[1fr_70px_130px_92px_128px_52px] lg:items-center"
             >
               <div className="flex items-center gap-2">
                 {l.slug ? (
@@ -90,6 +91,21 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
                 <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-md border border-line-strong px-2 text-xs font-semibold text-cream">
                   {l.size}
                 </span>
+              </div>
+              <div className="text-sm">
+                <span className="text-xs text-muted lg:hidden">Nömrə: </span>
+                {l.phone ? (
+                  <a
+                    href={`https://wa.me/${l.phone.replace(/[^0-9]/g, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-pitch hover:underline"
+                  >
+                    {l.phone}
+                  </a>
+                ) : (
+                  <span className="text-faint">—</span>
+                )}
               </div>
               <div className="text-sm lg:text-right">
                 <span className="text-xs text-muted lg:hidden">Qiymət: </span>

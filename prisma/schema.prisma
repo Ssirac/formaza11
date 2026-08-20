@@ -54,6 +54,7 @@ model ClickEvent {
   productId String
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   size      String
+  phone     String?  // customer's number, if they left one with the order
   createdAt DateTime @default(now())
 
   @@index([productId])

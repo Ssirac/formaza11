@@ -10,13 +10,14 @@ export function trackAndOpen(params: {
   size: string;
   whatsappNumber: string;
   slug?: string;
+  phone?: string;
 }) {
-  const { productId, productName, size, whatsappNumber, slug } = params;
+  const { productId, productName, size, whatsappNumber, slug, phone } = params;
   try {
     fetch("/api/track", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId, size }),
+      body: JSON.stringify({ productId, size, phone: phone || undefined }),
       keepalive: true,
     }).catch(() => {});
   } catch {
@@ -26,6 +27,12 @@ export function trackAndOpen(params: {
     slug && typeof window !== "undefined"
       ? `${window.location.origin}/forma/${slug}`
       : undefined;
-  const url = buildWhatsAppUrl(whatsappNumber, productName, size, productUrl);
+  const url = buildWhatsAppUrl(
+    whatsappNumber,
+    productName,
+    size,
+    productUrl,
+    phone
+  );
   window.open(url, "_blank", "noopener,noreferrer");
 }

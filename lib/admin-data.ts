@@ -201,6 +201,7 @@ export type Lead = {
   productName: string;
   slug: string;
   size: string;
+  phone: string | null;
   salePrice: number | null;
   createdAt: string;
 };
@@ -238,6 +239,7 @@ export async function getLeads(opts?: {
         productName: c.product?.name ?? "—",
         slug: c.product?.slug ?? "",
         size: c.size,
+        phone: (c as any).phone ?? null,
         salePrice: (c.product as any)?.salePrice ?? null,
         createdAt: c.createdAt.toISOString(),
       })),

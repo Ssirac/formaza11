@@ -10,8 +10,12 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const productId = typeof body?.productId === "string" ? body.productId : null;
     const size = typeof body?.size === "string" ? body.size : null;
+    const phone =
+      typeof body?.phone === "string" && body.phone.trim()
+        ? body.phone.trim().slice(0, 40)
+        : null;
     if (productId && size) {
-      await prisma.clickEvent.create({ data: { productId, size } });
+      await prisma.clickEvent.create({ data: { productId, size, phone } });
     }
   } catch {
     // ignore — tracking must never surface an error to the visitor
