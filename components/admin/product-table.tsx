@@ -5,8 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Pencil, Trash2, Shirt, Eye, EyeOff } from "lucide-react";
+import { Pencil, Trash2, Shirt, Eye, EyeOff, Copy } from "lucide-react";
 import type { AdminProductListItem } from "@/lib/admin-data";
+import { buildWhatsAppMessage } from "@/lib/whatsapp";
 import {
   setProductHidden,
   setProductFeatured,
@@ -58,7 +59,7 @@ export function ProductTable({ products }: { products: AdminProductListItem[] })
     <>
       <div className="overflow-hidden rounded-2xl border border-line bg-surface">
         {/* header (desktop) */}
-        <div className="hidden grid-cols-[1fr_120px_70px_70px_128px_92px_80px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
+        <div className="hidden grid-cols-[1fr_112px_64px_64px_120px_84px_116px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
           <span>Məhsul</span>
           <span>Stok</span>
           <span className="text-center">Seçilmiş</span>
@@ -116,6 +117,22 @@ function ProductRow({
         next ? "Kataloqda “Son X ədəd” göstərilir" : "Gizlədildi"
       );
       router.refresh();
+    }
+  }
+
+  async function copyMsg() {
+    const msg = buildWhatsAppMessage(
+      product.name,
+      "—",
+      undefined,
+      undefined,
+      product.salePrice
+    );
+    try {
+      await navigator.clipboard.writeText(msg);
+      toast.success("Mesaj kopyalandı");
+    } catch {
+      toast.error("Kopyalanmadı");
     }
   }
 
@@ -186,7 +203,7 @@ function ProductRow({
   }
 
   return (
-    <li className="grid grid-cols-1 gap-4 px-5 py-4 lg:grid-cols-[1fr_120px_70px_70px_128px_92px_80px] lg:items-center">
+    <li className="grid grid-cols-1 gap-4 px-5 py-4 lg:grid-cols-[1fr_112px_64px_64px_120px_84px_116px] lg:items-center">
       {/* product */}
       <div className="flex items-center gap-3">
         <div className="relative h-14 w-11 shrink-0 overflow-hidden rounded-lg border border-line bg-ink-2">
@@ -323,6 +340,15 @@ function ProductRow({
 
       {/* actions */}
       <div className="flex items-center gap-2 lg:justify-end">
+        <button
+          type="button"
+          onClick={copyMsg}
+          title="WhatsApp mesajını kopyala"
+          aria-label="Mesajı kopyala"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line-strong text-muted transition-colors hover:border-pitch/60 hover:text-pitch"
+        >
+          <Copy className="h-4 w-4" />
+        </button>
         <Link
           href={`/admin/mehsullar/${product.id}`}
           className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line-strong text-muted transition-colors hover:border-gold hover:text-gold"
