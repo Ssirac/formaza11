@@ -11,10 +11,21 @@ export function buildWhatsAppMessage(
   categorySlug?: string
 ): string {
   const emoji = categoryEmoji(categorySlug);
-  let msg =
-    price != null && price > 0
+  // Jersey categories read as "forması"; shorts/accessories/etc. stay generic.
+  const notJersey = /şort|köyn[əe]k|aksesuar|çanta|papaq|corab|[əe]lc[əe]k|tayt|bandaj/i;
+  const isJersey =
+    !notJersey.test(productName) && categorySlug !== "aksesuar";
+
+  let msg: string;
+  if (price != null && price > 0) {
+    msg = isJersey
       ? `Salam 👋🏼 ${productName} formasının qiyməti ${price} AZN-dir. ${emoji}`
-      : `Salam 👋🏼 ${productName} forması. ${emoji}`;
+      : `Salam 👋🏼 ${productName} — qiyməti ${price} AZN-dir. ${emoji}`;
+  } else {
+    msg = isJersey
+      ? `Salam 👋🏼 ${productName} forması. ${emoji}`
+      : `Salam 👋🏼 ${productName} ${emoji}`;
+  }
   msg +=
     size && size !== "—"
       ? `\nSeçdiyim ölçü: ${size} 📦`

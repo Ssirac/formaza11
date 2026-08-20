@@ -51,6 +51,8 @@ const CATEGORY_EMOJI: Record<string, string> = {
   hokkey: "🏒",
   reqbi: "🏉",
   "amerikan-futbolu": "🏈",
+  aksesuar: "🧢",
+  sort: "🩳",
 };
 
 export function categoryEmoji(slug?: string): string {
