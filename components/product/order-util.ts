@@ -11,8 +11,10 @@ export function trackAndOpen(params: {
   whatsappNumber: string;
   slug?: string;
   phone?: string;
+  price?: number | null;
 }) {
-  const { productId, productName, size, whatsappNumber, slug, phone } = params;
+  const { productId, productName, size, whatsappNumber, slug, phone, price } =
+    params;
   try {
     fetch("/api/track", {
       method: "POST",
@@ -32,7 +34,8 @@ export function trackAndOpen(params: {
     productName,
     size,
     productUrl,
-    phone
+    phone,
+    price
   );
   window.open(url, "_blank", "noopener,noreferrer");
 }

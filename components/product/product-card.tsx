@@ -69,6 +69,7 @@ export function ProductCard({
       productId: product.id,
       productName: product.name,
       size: selected ?? "—",
+      price: product.salePrice,
       whatsappNumber,
       slug: product.slug,
     });

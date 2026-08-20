@@ -13,6 +13,7 @@ export type ProductDTO = {
   stockStatus: string;
   quantity: number | null;
   stockAlert: boolean;
+  salePrice: number | null;
   clickCount: number;
   createdAt: string;
 };
