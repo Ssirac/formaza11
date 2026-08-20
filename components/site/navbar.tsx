@@ -59,7 +59,7 @@ export function Navbar({ whatsappNumber }: { whatsappNumber: string }) {
             setOpen(false);
           }}
         >
-          <Logo />
+          <Logo showText={false} />
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
