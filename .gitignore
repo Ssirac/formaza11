@@ -46,3 +46,7 @@ next-env.d.ts
 
 # user-added club crest pack (trademarked — not served/committed)
 /klublogopack
+
+# lighthouse / psi temp
+_lh.json
+_psi.json
