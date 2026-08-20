@@ -6,6 +6,7 @@ import {
   getProductBySlug,
   getSimilarProducts,
   getSettings,
+  getVisibleSlugs,
 } from "@/lib/queries";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductPurchase } from "@/components/product/product-purchase";
@@ -15,6 +16,12 @@ import { ProductGrid } from "@/components/product/product-grid";
 import { SectionHeading } from "@/components/home/section-heading";
 
 export const revalidate = 60; // ISR: keşlənir, admin dəyişəndə revalidatePath dərhal təzələyir
+
+// Pre-render every product page so they are served from cache, not on-demand.
+export async function generateStaticParams() {
+  const slugs = await getVisibleSlugs();
+  return slugs.map((slug) => ({ slug }));
+}
 
 type Params = Promise<{ slug: string }>;
 
