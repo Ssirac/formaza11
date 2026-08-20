@@ -1,12 +1,13 @@
 "use server";
 
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { prisma } from "@/lib/db";
 import { assertAdmin } from "@/lib/session";
 import { slugify } from "@/lib/utils";
 import { uploadImage, isCloudinaryConfigured } from "@/lib/cloudinary";
 import { deriveNameFromDescription } from "@/lib/jersey-description";
+import { CACHE_TAGS } from "@/lib/queries";
 
 const price = z.number().nonnegative().nullable().optional();
 
@@ -45,6 +46,9 @@ async function uniqueSlug(base: string, excludeId?: string): Promise<string> {
 }
 
 function revalidateAll(slug?: string) {
+  // Clear cached DB reads (kataloq/categories) so changes show immediately.
+  updateTag(CACHE_TAGS.products);
+  updateTag(CACHE_TAGS.categories);
   revalidatePath("/");
   revalidatePath("/kataloq");
   revalidatePath("/admin");

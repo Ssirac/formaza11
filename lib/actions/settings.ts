@@ -1,9 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { prisma } from "@/lib/db";
 import { assertAdmin } from "@/lib/session";
 import { SETTING_KEYS } from "@/lib/constants";
+import { CACHE_TAGS } from "@/lib/queries";
 
 export type ActionResult = { ok: boolean; error?: string };
 
@@ -24,6 +25,7 @@ export async function updateSettings(
         })
       )
     );
+    updateTag(CACHE_TAGS.settings);
     revalidatePath("/");
     revalidatePath("/kataloq");
     revalidatePath("/admin/ayarlar");

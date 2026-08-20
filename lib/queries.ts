@@ -1,7 +1,15 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/db";
 import { DEFAULT_SETTINGS } from "@/lib/constants";
 import { asStringArray, type ProductDTO, type CategoryDTO } from "@/lib/types";
+
+// Cache tags — mutations call updateTag(...) so cached reads refresh instantly.
+export const CACHE_TAGS = {
+  products: "products",
+  categories: "categories",
+  settings: "settings",
+} as const;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -30,39 +38,49 @@ function toProductDTO(p: any): ProductDTO {
   };
 }
 
-export async function getSettings(): Promise<Record<string, string>> {
-  try {
-    const rows = await prisma.setting.findMany();
-    const map: Record<string, string> = { ...DEFAULT_SETTINGS };
-    for (const r of rows) map[r.key] = r.value;
-    return map;
-  } catch {
-    return { ...DEFAULT_SETTINGS };
-  }
-}
+export const getSettings = unstable_cache(
+  async (): Promise<Record<string, string>> => {
+    try {
+      const rows = await prisma.setting.findMany();
+      const map: Record<string, string> = { ...DEFAULT_SETTINGS };
+      for (const r of rows) map[r.key] = r.value;
+      return map;
+    } catch {
+      return { ...DEFAULT_SETTINGS };
+    }
+  },
+  ["settings"],
+  { tags: [CACHE_TAGS.settings], revalidate: 60 }
+);
 
 export async function getWhatsappNumber(): Promise<string> {
   const s = await getSettings();
   return s.whatsappNumber || DEFAULT_SETTINGS.whatsappNumber;
 }
 
-export async function getCategories(): Promise<CategoryDTO[]> {
-  try {
-    const cats = await prisma.category.findMany({
-      orderBy: { order: "asc" },
-      include: { _count: { select: { products: { where: { isHidden: false } } } } },
-    });
-    return cats.map((c) => ({
-      id: c.id,
-      name: c.name,
-      slug: c.slug,
-      order: c.order,
-      productCount: c._count.products,
-    }));
-  } catch {
-    return [];
-  }
-}
+export const getCategories = unstable_cache(
+  async (): Promise<CategoryDTO[]> => {
+    try {
+      const cats = await prisma.category.findMany({
+        orderBy: { order: "asc" },
+        include: {
+          _count: { select: { products: { where: { isHidden: false } } } },
+        },
+      });
+      return cats.map((c) => ({
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        order: c.order,
+        productCount: c._count.products,
+      }));
+    } catch {
+      return [];
+    }
+  },
+  ["categories"],
+  { tags: [CACHE_TAGS.categories, CACHE_TAGS.products], revalidate: 60 }
+);
 
 export async function getFeaturedProducts(limit = 8): Promise<ProductDTO[]> {
   try {
@@ -119,7 +137,7 @@ export async function getHeroImages(limit = 16): Promise<string[]> {
   }
 }
 
-export async function getVisibleProducts(opts?: {
+async function getVisibleProductsUncached(opts?: {
   categorySlug?: string;
   q?: string;
   size?: string;
@@ -168,6 +186,12 @@ export async function getVisibleProducts(opts?: {
     return { products: [], total: 0, page, pageSize, totalPages: 1 };
   }
 }
+
+export const getVisibleProducts = unstable_cache(
+  getVisibleProductsUncached,
+  ["visible-products"],
+  { tags: [CACHE_TAGS.products], revalidate: 60 }
+);
 
 export async function getMostViewedProducts(limit = 8): Promise<ProductDTO[]> {
   try {

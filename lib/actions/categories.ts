@@ -1,10 +1,11 @@
 "use server";
 
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { prisma } from "@/lib/db";
 import { assertAdmin } from "@/lib/session";
 import { slugify } from "@/lib/utils";
+import { CACHE_TAGS } from "@/lib/queries";
 
 export type ActionResult = { ok: boolean; error?: string; id?: string };
 
@@ -14,6 +15,8 @@ const CategoryInput = z.object({
 });
 
 function revalidateAll() {
+  updateTag(CACHE_TAGS.categories);
+  updateTag(CACHE_TAGS.products);
   revalidatePath("/");
   revalidatePath("/kataloq");
   revalidatePath("/admin");
