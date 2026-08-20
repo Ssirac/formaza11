@@ -1,6 +1,6 @@
 // One large, faded, centered "FORMAZA11" — scales to the image width.
 const WATERMARK =
-  "l_text:Arial_40_bold:FORMAZA11,co_white,o_11,w_0.9,fl_relative,a_-18,g_center";
+  "l_text:Arial_40_bold:FORMAZA11,co_white,o_20,w_0.7,fl_relative,a_-18,g_center";
 
 /**
  * Ensure a Cloudinary delivery URL carries the current watermark. Inserts it,
