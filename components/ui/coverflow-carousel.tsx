@@ -341,7 +341,7 @@ export function CoverflowCarousel({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={cloudinaryLoader({ src: slide.src, width: 700 })}
+                  src={cloudinaryLoader({ src: slide.src, width: 550 })}
                   alt={slide.alt}
                   draggable={false}
                   className="h-full w-full select-none object-cover"

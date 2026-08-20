@@ -65,6 +65,15 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${archivo.variable} ${manrope.variable} h-full antialiased`}
     >
+      <head>
+        {/* Start the Cloudinary connection early so images fetch sooner (LCP). */}
+        <link
+          rel="preconnect"
+          href="https://res.cloudinary.com"
+          crossOrigin=""
+        />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
       <body className="min-h-full flex flex-col bg-ink text-cream">
         <script
           dangerouslySetInnerHTML={{

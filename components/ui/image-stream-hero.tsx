@@ -133,7 +133,7 @@ export function ImageStreamHero({
                   {img ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={cloudinaryLoader({ src: img.src, width: 400 })}
+                      src={cloudinaryLoader({ src: img.src, width: 300 })}
                       alt={img.alt ?? ""}
                       loading="lazy"
                       decoding="async"
