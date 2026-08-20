@@ -12,6 +12,7 @@ export type ProductDTO = {
   isFeatured: boolean;
   stockStatus: string;
   quantity: number | null;
+  stockAlert: boolean;
   clickCount: number;
   createdAt: string;
 };

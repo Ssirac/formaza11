@@ -5,13 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Pencil, Trash2, Shirt } from "lucide-react";
+import { Pencil, Trash2, Shirt, Eye, EyeOff } from "lucide-react";
 import type { AdminProductListItem } from "@/lib/admin-data";
 import {
   setProductHidden,
   setProductFeatured,
   setProductStock,
   setProductQuantity,
+  setProductStockAlert,
   deleteProduct,
 } from "@/lib/actions/products";
 import { STOCK_STATUSES } from "@/lib/constants";
@@ -57,12 +58,12 @@ export function ProductTable({ products }: { products: AdminProductListItem[] })
     <>
       <div className="overflow-hidden rounded-2xl border border-line bg-surface">
         {/* header (desktop) */}
-        <div className="hidden grid-cols-[1fr_128px_76px_76px_52px_100px_84px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
+        <div className="hidden grid-cols-[1fr_120px_70px_70px_128px_92px_80px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
           <span>Məhsul</span>
           <span>Stok</span>
           <span className="text-center">Seçilmiş</span>
           <span className="text-center">Gizli</span>
-          <span className="text-center">Say</span>
+          <span className="text-center">Say / Göstər</span>
           <span className="text-right">Qiymət (₼)</span>
           <span className="text-right">Əməliyyat</span>
         </div>
@@ -100,7 +101,23 @@ function ProductRow({
   const [qty, setQty] = useState(
     product.quantity == null ? "" : String(product.quantity)
   );
+  const [alert, setAlert] = useState(product.stockAlert);
   const [busy, setBusy] = useState(false);
+
+  async function toggleAlert() {
+    const next = !alert;
+    setAlert(next);
+    const res = await setProductStockAlert(product.id, next);
+    if (!res.ok) {
+      setAlert(!next);
+      toast.error(res.error ?? "Dəyişmədi");
+    } else {
+      toast.success(
+        next ? "Kataloqda “Son X ədəd” göstərilir" : "Gizlədildi"
+      );
+      router.refresh();
+    }
+  }
 
   async function saveQty() {
     const t = qty.trim();
@@ -169,7 +186,7 @@ function ProductRow({
   }
 
   return (
-    <li className="grid grid-cols-1 gap-4 px-5 py-4 lg:grid-cols-[1fr_128px_76px_76px_52px_100px_84px] lg:items-center">
+    <li className="grid grid-cols-1 gap-4 px-5 py-4 lg:grid-cols-[1fr_120px_70px_70px_128px_92px_80px] lg:items-center">
       {/* product */}
       <div className="flex items-center gap-3">
         <div className="relative h-14 w-11 shrink-0 overflow-hidden rounded-lg border border-line bg-ink-2">
@@ -247,7 +264,7 @@ function ProductRow({
         />
       </div>
 
-      {/* quantity (admin-only count) */}
+      {/* quantity + catalog "Son X ədəd" toggle */}
       <div className="flex items-center gap-2 lg:justify-center">
         <span className="text-xs text-muted lg:hidden">Say:</span>
         <input
@@ -261,8 +278,24 @@ function ProductRow({
             if (e.key === "Enter") (e.target as HTMLInputElement).blur();
           }}
           placeholder="—"
-          className="h-9 w-16 rounded-lg border border-line-strong bg-ink-2 px-2 text-center text-sm text-cream outline-none transition-colors hover:border-gold/50 focus:border-gold"
+          className="h-9 w-14 rounded-lg border border-line-strong bg-ink-2 px-2 text-center text-sm text-cream outline-none transition-colors hover:border-gold/50 focus:border-gold"
         />
+        <button
+          type="button"
+          onClick={toggleAlert}
+          aria-pressed={alert}
+          title={
+            alert ? "Kataloqda “Son X ədəd” göstərilir" : "Kataloqda gizli"
+          }
+          className={cn(
+            "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors",
+            alert
+              ? "border-red-500/50 bg-red-500/10 text-red-400"
+              : "border-line-strong text-muted hover:border-gold/50 hover:text-cream"
+          )}
+        >
+          {alert ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+        </button>
       </div>
 
       {/* price (admin-only) */}

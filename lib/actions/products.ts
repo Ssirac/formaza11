@@ -229,6 +229,24 @@ export async function setProductQuantity(
   }
 }
 
+export async function setProductStockAlert(
+  id: string,
+  stockAlert: boolean
+): Promise<ActionResult> {
+  try {
+    await assertAdmin();
+    const p = await prisma.product.update({
+      where: { id },
+      data: { stockAlert },
+      select: { slug: true },
+    });
+    revalidateAll(p.slug);
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: errorMessage(e) };
+  }
+}
+
 /** Upload a base64 data URI via Cloudinary; returns the hosted URL. */
 export async function uploadProductImage(
   dataUri: string
