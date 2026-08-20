@@ -4,6 +4,7 @@ import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { cloudinaryLoader } from "@/lib/cloudinary-loader";
 
 const useIsoLayoutEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
@@ -340,7 +341,7 @@ export function CoverflowCarousel({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={slide.src}
+                  src={cloudinaryLoader({ src: slide.src, width: 700 })}
                   alt={slide.alt}
                   draggable={false}
                   className="h-full w-full select-none object-cover"

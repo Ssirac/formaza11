@@ -1,5 +1,5 @@
 // One large, faded, centered "FORMAZA11" — scales to the image width.
-const WATERMARK =
+export const WATERMARK =
   "l_text:Arial_40_bold:FORMAZA11,co_white,o_20,w_0.7,fl_relative,a_-18,g_center";
 
 /**

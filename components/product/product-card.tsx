@@ -9,6 +9,7 @@ import type { ProductDTO } from "@/lib/types";
 import { SizeChips } from "./size-chips";
 import { StockBadge } from "./stock-badge";
 import { withCloudinaryWatermark } from "@/lib/image-watermark";
+import { cloudinaryLoader } from "@/lib/cloudinary-loader";
 import { trackAndOpen } from "./order-util";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { buttonClasses } from "@/components/ui/button";
@@ -92,6 +93,7 @@ export function ProductCard({
         {primary ? (
           <>
             <Image
+              loader={cloudinaryLoader}
               src={withCloudinaryWatermark(primary)}
               alt={product.name}
               fill
@@ -103,6 +105,7 @@ export function ProductCard({
             />
             {hasSecond && (
               <Image
+                loader={cloudinaryLoader}
                 src={withCloudinaryWatermark(secondary)}
                 alt=""
                 fill

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Shirt } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { withCloudinaryWatermark } from "@/lib/image-watermark";
+import { cloudinaryLoader } from "@/lib/cloudinary-loader";
 
 export function ProductGallery({
   images,
@@ -29,6 +30,7 @@ export function ProductGallery({
         {images.map((src, i) => (
           <Image
             key={src + i}
+            loader={cloudinaryLoader}
             src={withCloudinaryWatermark(src)}
             alt={alt}
             fill
@@ -58,6 +60,7 @@ export function ProductGallery({
               )}
             >
               <Image
+                loader={cloudinaryLoader}
                 src={src}
                 alt=""
                 fill

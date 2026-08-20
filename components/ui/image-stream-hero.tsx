@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { cloudinaryLoader } from "@/lib/cloudinary-loader";
 
 export type CorridorPath = {
   perspective?: number;
@@ -132,7 +133,7 @@ export function ImageStreamHero({
                   {img ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={img.src}
+                      src={cloudinaryLoader({ src: img.src, width: 400 })}
                       alt={img.alt ?? ""}
                       loading="lazy"
                       decoding="async"
