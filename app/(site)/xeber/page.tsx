@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { FootballNews } from "@/components/home/football-news";
 import { FootballScores } from "@/components/home/football-scores";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: keşlənir, admin dəyişəndə revalidatePath dərhal təzələyir
 
 export const metadata: Metadata = {
   title: "Futbol xəbərləri",

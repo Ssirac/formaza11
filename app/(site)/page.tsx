@@ -25,7 +25,7 @@ import {
   getHeroImages,
 } from "@/lib/queries";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: keşlənir, admin dəyişəndə revalidatePath dərhal təzələyir
 
 export default async function HomePage() {
   const [settings, featured, categories, mostViewed, heroImages] =

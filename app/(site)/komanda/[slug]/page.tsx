@@ -8,7 +8,7 @@ import { ProductGrid } from "@/components/product/product-grid";
 import { Pagination } from "@/components/catalog/pagination";
 import { buttonClasses } from "@/components/ui/button";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: keşlənir, admin dəyişəndə revalidatePath dərhal təzələyir
 
 const ALL: Crest[] = [...CLUB_CRESTS, ...NATION_CRESTS];
 const findCrest = (slug: string) => ALL.find((c) => c.slug === slug);

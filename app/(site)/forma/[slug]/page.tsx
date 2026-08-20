@@ -14,7 +14,7 @@ import { findCrestForName } from "@/lib/crest-match";
 import { ProductGrid } from "@/components/product/product-grid";
 import { SectionHeading } from "@/components/home/section-heading";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: keşlənir, admin dəyişəndə revalidatePath dərhal təzələyir
 
 type Params = Promise<{ slug: string }>;
 

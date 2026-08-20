@@ -15,7 +15,7 @@ import { Pagination } from "@/components/catalog/pagination";
 import { ProductGrid } from "@/components/product/product-grid";
 import type { ProductSort } from "@/lib/queries";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR: keşlənir, admin dəyişəndə revalidatePath dərhal təzələyir
 
 export const metadata: Metadata = {
   title: "Kataloq",
