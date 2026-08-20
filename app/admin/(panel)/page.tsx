@@ -14,6 +14,7 @@ import {
   getTopProducts,
   getRecentClicks,
   getPricingSummary,
+  getStockCounts,
 } from "@/lib/admin-data";
 import { PageHeader } from "@/components/admin/page-header";
 import { StatCard } from "@/components/admin/stat-card";
@@ -30,11 +31,12 @@ export default async function DashboardPage({
   const sp = await searchParams;
   const includeOnWay = sp.anbar === "hamisi";
 
-  const [stats, top, recent, pricing] = await Promise.all([
+  const [stats, top, recent, pricing, stock] = await Promise.all([
     getAdminStats(),
     getTopProducts(6),
     getRecentClicks(8),
     getPricingSummary({ includeOnWay }),
+    getStockCounts(),
   ]);
 
   const money = (n: number) =>
@@ -78,6 +80,22 @@ export default async function DashboardPage({
           value={stats.clicks7d}
           icon={MousePointerClick}
         />
+      </div>
+
+      {/* Stok bölgüsü */}
+      <div className="mt-4 flex flex-wrap gap-3">
+        <span className="inline-flex items-center gap-2 rounded-xl border border-pitch/40 bg-pitch/10 px-3.5 py-2 text-sm font-semibold text-pitch">
+          <span className="h-2 w-2 rounded-full bg-pitch" />
+          Əldədir: {stock.in_stock}
+        </span>
+        <span className="inline-flex items-center gap-2 rounded-xl border border-sky-400/40 bg-sky-400/10 px-3.5 py-2 text-sm font-semibold text-sky-300">
+          <span className="h-2 w-2 rounded-full bg-sky-400" />
+          Yoldadır: {stock.on_way}
+        </span>
+        <span className="inline-flex items-center gap-2 rounded-xl border border-red-500/40 bg-red-500/10 px-3.5 py-2 text-sm font-semibold text-red-300">
+          <span className="h-2 w-2 rounded-full bg-red-500" />
+          Sifarişlə: {stock.pre_order}
+        </span>
       </div>
 
       {/* Maliyyə xülasəsi (yalnız admin) */}

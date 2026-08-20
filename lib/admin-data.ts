@@ -116,6 +116,27 @@ export async function getRecentClicks(limit = 8): Promise<RecentClick[]> {
   }
 }
 
+export type StockCounts = { in_stock: number; on_way: number; pre_order: number };
+
+export async function getStockCounts(): Promise<StockCounts> {
+  const out: StockCounts = { in_stock: 0, on_way: 0, pre_order: 0 };
+  try {
+    const rows = await prisma.product.groupBy({
+      by: ["stockStatus"],
+      where: { isHidden: false },
+      _count: { _all: true },
+    });
+    for (const r of rows) {
+      if (r.stockStatus in out) {
+        out[r.stockStatus as keyof StockCounts] = r._count._all;
+      }
+    }
+    return out;
+  } catch {
+    return out;
+  }
+}
+
 export type PricingSummary = {
   priced: number;
   unpriced: number;
