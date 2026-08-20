@@ -7,16 +7,14 @@ export function buildWhatsAppMessage(
   phone?: string,
   price?: number | null
 ): string {
-  let msg: string;
-  if (price != null && price > 0) {
-    msg = `Salam 👋🏼 ${productName} formasının qiyməti ${price} AZN-dir. 👕`;
-    msg +=
-      size && size !== "—"
-        ? `\nSeçdiyim ölçü: ${size} 📦`
-        : `\nSifariş üçün ölçünüzü qeyd edə bilərsiniz. 📦`;
-  } else {
-    msg = `Salam! Formaza11 saytından yazıram. "${productName}" (${size} ölçü) — qiymət və sifariş haqqında məlumat almaq istəyirəm.`;
-  }
+  let msg =
+    price != null && price > 0
+      ? `Salam 👋🏼 ${productName} formasının qiyməti ${price} AZN-dir. 👕`
+      : `Salam 👋🏼 ${productName} forması. 👕`;
+  msg +=
+    size && size !== "—"
+      ? `\nSeçdiyim ölçü: ${size} 📦`
+      : `\nSifariş üçün ölçünüzü qeyd edə bilərsiniz. 📦`;
   if (phone && phone.trim()) msg += `\nNömrəm: ${phone.trim()}`;
   if (productUrl) msg += `\n${productUrl}`;
   return msg;
