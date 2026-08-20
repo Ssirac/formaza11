@@ -22,12 +22,18 @@ export function slugify(input: string): string {
     .replace(/^-|-$/g, "");
 }
 
+const AZ_MONTHS = [
+  "yan", "fev", "mar", "apr", "may", "iyn",
+  "iyl", "avq", "sen", "okt", "noy", "dek",
+];
+
+/** e.g. "20 avq 2026, 18:36" */
 export function formatDate(d: Date | string): string {
   const date = typeof d === "string" ? new Date(d) : d;
-  return new Intl.DateTimeFormat("az-AZ", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
+  const day = date.getDate();
+  const mon = AZ_MONTHS[date.getMonth()];
+  const year = date.getFullYear();
+  const hh = String(date.getHours()).padStart(2, "0");
+  const mm = String(date.getMinutes()).padStart(2, "0");
+  return `${day} ${mon} ${year}, ${hh}:${mm}`;
 }

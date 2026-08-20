@@ -6,9 +6,52 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Trash2, ExternalLink } from "lucide-react";
 import type { Lead } from "@/lib/admin-data";
-import { deleteLead, clearAllLeads } from "@/lib/actions/leads";
+import { deleteLead, clearAllLeads, setLeadPhone } from "@/lib/actions/leads";
+import { WhatsAppIcon } from "@/components/ui/icons";
 import { ConfirmDialog } from "./confirm-dialog";
 import { formatDate } from "@/lib/utils";
+
+/** Editable phone cell — admin can type/correct the customer's number. */
+function LeadPhoneCell({ id, phone }: { id: string; phone: string | null }) {
+  const [value, setValue] = useState(phone ?? "");
+
+  async function save() {
+    if (value.trim() === (phone ?? "")) return;
+    const res = await setLeadPhone(id, value);
+    if (!res.ok) toast.error(res.error ?? "Dəyişmədi");
+    else toast.success("Nömrə yadda saxlanıldı");
+  }
+
+  const digits = value.replace(/[^0-9]/g, "");
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="text-xs text-muted lg:hidden">Nömrə:</span>
+      <input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={save}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+        }}
+        placeholder="—"
+        inputMode="tel"
+        className="h-9 w-full min-w-0 rounded-lg border border-line-strong bg-ink-2 px-2 text-sm text-cream outline-none transition-colors hover:border-gold/50 focus:border-gold"
+      />
+      {digits.length >= 7 && (
+        <a
+          href={`https://wa.me/${digits}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp"
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line-strong text-pitch transition-colors hover:border-pitch/60"
+        >
+          <WhatsAppIcon className="h-4 w-4" />
+        </a>
+      )}
+    </div>
+  );
+}
 
 export function LeadsTable({ leads }: { leads: Lead[] }) {
   const router = useRouter();
@@ -58,7 +101,7 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-line bg-surface">
-        <div className="hidden grid-cols-[1fr_70px_130px_92px_128px_52px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
+        <div className="hidden grid-cols-[1fr_60px_164px_84px_150px_52px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
           <span>Forma</span>
           <span className="text-center">Ölçü</span>
           <span>Nömrə</span>
@@ -70,7 +113,7 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
           {leads.map((l) => (
             <li
               key={l.id}
-              className="grid grid-cols-1 gap-2 px-5 py-4 lg:grid-cols-[1fr_70px_130px_92px_128px_52px] lg:items-center"
+              className="grid grid-cols-1 gap-2 px-5 py-4 lg:grid-cols-[1fr_60px_164px_84px_150px_52px] lg:items-center"
             >
               <div className="flex items-center gap-2">
                 {l.slug ? (
@@ -92,21 +135,7 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
                   {l.size}
                 </span>
               </div>
-              <div className="text-sm">
-                <span className="text-xs text-muted lg:hidden">Nömrə: </span>
-                {l.phone ? (
-                  <a
-                    href={`https://wa.me/${l.phone.replace(/[^0-9]/g, "")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-semibold text-pitch hover:underline"
-                  >
-                    {l.phone}
-                  </a>
-                ) : (
-                  <span className="text-faint">—</span>
-                )}
-              </div>
+              <LeadPhoneCell id={l.id} phone={l.phone} />
               <div className="text-sm lg:text-right">
                 <span className="text-xs text-muted lg:hidden">Qiymət: </span>
                 <span className="font-semibold text-cream">
