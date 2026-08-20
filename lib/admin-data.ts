@@ -125,10 +125,13 @@ export type PricingSummary = {
   avgMarginPct: number;
 };
 
-export async function getPricingSummary(): Promise<PricingSummary> {
+export async function getPricingSummary(opts?: {
+  includeOnWay?: boolean;
+}): Promise<PricingSummary> {
   try {
+    const statuses = opts?.includeOnWay ? ["in_stock", "on_way"] : ["in_stock"];
     const rows = await prisma.product.findMany({
-      where: { isHidden: false },
+      where: { isHidden: false, stockStatus: { in: statuses } },
       select: { costPrice: true, shippingCost: true, salePrice: true },
     });
     let priced = 0;

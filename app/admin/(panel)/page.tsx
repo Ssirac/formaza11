@@ -22,12 +22,19 @@ import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const sp = await searchParams;
+  const includeOnWay = sp.anbar === "hamisi";
+
   const [stats, top, recent, pricing] = await Promise.all([
     getAdminStats(),
     getTopProducts(6),
     getRecentClicks(8),
-    getPricingSummary(),
+    getPricingSummary({ includeOnWay }),
   ]);
 
   const money = (n: number) =>
@@ -83,6 +90,31 @@ export default async function DashboardPage() {
           <span className="ml-auto text-xs text-faint">
             {pricing.priced} qiymətli · {pricing.unpriced} qiymətsiz
           </span>
+        </div>
+
+        <div className="mt-3 inline-flex rounded-xl border border-line-strong p-1">
+          <Link
+            href="/admin"
+            scroll={false}
+            className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors ${
+              !includeOnWay
+                ? "bg-gold/15 text-gold"
+                : "text-muted hover:text-cream"
+            }`}
+          >
+            Yalnız Əldədə
+          </Link>
+          <Link
+            href="/admin?anbar=hamisi"
+            scroll={false}
+            className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors ${
+              includeOnWay
+                ? "bg-gold/15 text-gold"
+                : "text-muted hover:text-cream"
+            }`}
+          >
+            Yolda olanlar da
+          </Link>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
           <div className="rounded-xl border border-line bg-ink-2 px-4 py-3">
