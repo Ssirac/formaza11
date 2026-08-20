@@ -64,16 +64,20 @@ export const HOW_TO_STEPS = [
   },
 ] as const;
 
+// Çin (1688 / Taobao) idman forması ölçüləri — Asiya biçimi (Avropadan ~1 ölçü kiçik).
 export const SIZE_GUIDE_ROWS = [
-  { size: "S", chest: "88–94", length: "68", height: "165–172", weight: "55–65", advice: "48–52 bədən" },
-  { size: "M", chest: "96–102", length: "71", height: "170–178", weight: "64–74", advice: "52–54 bədən" },
-  { size: "L", chest: "104–110", length: "74", height: "176–183", weight: "73–84", advice: "54–56 bədən" },
-  { size: "XL", chest: "112–118", length: "77", height: "181–188", weight: "83–95", advice: "56–58 bədən" },
-  { size: "XXL", chest: "120–126", length: "80", height: "186–195", weight: "94–108", advice: "58–60 bədən" },
+  { size: "S", chest: "90–96", length: "68", height: "160–168", weight: "50–60", advice: "44–46 beden" },
+  { size: "M", chest: "96–102", length: "70", height: "165–173", weight: "58–68", advice: "46–48 beden" },
+  { size: "L", chest: "102–108", length: "72", height: "170–178", weight: "66–77", advice: "48–50 beden" },
+  { size: "XL", chest: "108–114", length: "74", height: "175–183", weight: "75–86", advice: "50–52 beden" },
+  { size: "XXL", chest: "114–122", length: "76", height: "180–190", weight: "84–98", advice: "52–54 beden" },
 ] as const;
 
 export const SIZE_NOTE =
-  "Ölçülər bir az dar gəlir — adətən geyindiyindən bir ölçü böyük seçməyi tövsiyə edirik.";
+  "Çin (1688 / Taobao) ölçüləridir — Avropa ölçüsündən bir az kiçik gəlir. Sərhəddə qalırsansa bir ölçü böyük seçməyi tövsiyə edirik.";
+
+export const SPORT_FIT_NOTE =
+  "Basketbol, Amerikan futbolu, UFC və hokkey formaları daha sərbəst (oversize) biçimdədir — adətən adi ölçünü seç. Klub, milli və retro futbol formaları bədənə uyğun biçimdədir; boy və çəkiyə görə seç.";
 
 export const FAQ_ITEMS = [
   {

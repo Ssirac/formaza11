@@ -1,5 +1,5 @@
-import { Ruler, Info } from "lucide-react";
-import { SIZE_GUIDE_ROWS, SIZE_NOTE } from "@/lib/constants";
+import { Ruler, Info, Shirt } from "lucide-react";
+import { SIZE_GUIDE_ROWS, SIZE_NOTE, SPORT_FIT_NOTE } from "@/lib/constants";
 import { SectionHeading } from "./section-heading";
 import { Reveal } from "@/components/motion/reveal";
 
@@ -9,7 +9,7 @@ export function SizeGuide() {
       <SectionHeading
         kicker="Ölçü bələdçisi"
         title="Doğru ölçünü seç"
-        description="Aşağıdakı cədvəl böyük (adult) ölçülər üçündür. Ölçülərdən əmin deyilsənsə, WhatsApp-da soruş."
+        description="Çin (1688 / Taobao) ölçülərinə əsaslanır və bütün formalar üçündür — futbol, basketbol, UFC, hokkey və s. Əmin deyilsənsə, boyunu/çəkini WhatsApp-da yaz, biz seçək."
       />
 
       <Reveal className="mt-10">
@@ -56,6 +56,10 @@ export function SizeGuide() {
           <div className="flex items-start gap-3 border-t border-line bg-gold/5 px-5 py-4">
             <Info className="mt-0.5 h-5 w-5 shrink-0 text-gold" />
             <p className="text-sm text-cream">{SIZE_NOTE}</p>
+          </div>
+          <div className="flex items-start gap-3 border-t border-line px-5 py-4">
+            <Shirt className="mt-0.5 h-5 w-5 shrink-0 text-silver" />
+            <p className="text-sm text-muted">{SPORT_FIT_NOTE}</p>
           </div>
         </div>
       </Reveal>
