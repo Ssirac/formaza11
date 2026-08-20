@@ -10,8 +10,10 @@ import type { AdminProductListItem } from "@/lib/admin-data";
 import {
   setProductHidden,
   setProductFeatured,
+  setProductStock,
   deleteProduct,
 } from "@/lib/actions/products";
+import { STOCK_STATUSES } from "@/lib/constants";
 import { Switch } from "./switch";
 import { ConfirmDialog } from "./confirm-dialog";
 import { cn } from "@/lib/utils";
@@ -54,9 +56,10 @@ export function ProductTable({ products }: { products: AdminProductListItem[] })
     <>
       <div className="overflow-hidden rounded-2xl border border-line bg-surface">
         {/* header (desktop) */}
-        <div className="hidden grid-cols-[1fr_110px_84px_84px_56px_112px_88px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
+        <div className="hidden grid-cols-[1fr_96px_128px_72px_72px_48px_96px_80px] gap-4 border-b border-line bg-ink-2/50 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-silver-deep lg:grid">
           <span>Məhsul</span>
           <span>Kateqoriya</span>
+          <span>Stok</span>
           <span className="text-center">Seçilmiş</span>
           <span className="text-center">Gizli</span>
           <span className="text-center">Klik</span>
@@ -93,7 +96,26 @@ function ProductRow({
   const router = useRouter();
   const [featured, setFeatured] = useState(product.isFeatured);
   const [hidden, setHidden] = useState(product.isHidden);
+  const [stock, setStock] = useState(product.stockStatus);
   const [busy, setBusy] = useState(false);
+
+  async function changeStock(value: string) {
+    const prev = stock;
+    setStock(value);
+    setBusy(true);
+    const res = await setProductStock(
+      product.id,
+      value as "in_stock" | "on_way" | "pre_order"
+    );
+    setBusy(false);
+    if (!res.ok) {
+      setStock(prev);
+      toast.error(res.error ?? "Dəyişmədi");
+    } else {
+      toast.success("Stok yeniləndi");
+      router.refresh();
+    }
+  }
 
   const { costPrice, shippingCost, salePrice } = product.pricing;
   const profit =
@@ -128,7 +150,7 @@ function ProductRow({
   }
 
   return (
-    <li className="grid grid-cols-1 gap-4 px-5 py-4 lg:grid-cols-[1fr_110px_84px_84px_56px_112px_88px] lg:items-center">
+    <li className="grid grid-cols-1 gap-4 px-5 py-4 lg:grid-cols-[1fr_96px_128px_72px_72px_48px_96px_80px] lg:items-center">
       {/* product */}
       <div className="flex items-center gap-3">
         <div className="relative h-14 w-11 shrink-0 overflow-hidden rounded-lg border border-line bg-ink-2">
@@ -164,6 +186,30 @@ function ProductRow({
       <span className="hidden truncate text-sm text-muted lg:block">
         {product.categoryName}
       </span>
+
+      {/* stock status */}
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-muted lg:hidden">Stok:</span>
+        <select
+          value={stock}
+          onChange={(e) => changeStock(e.target.value)}
+          disabled={busy}
+          className={cn(
+            "h-9 w-full rounded-lg border bg-ink-2 px-2 text-xs font-semibold outline-none transition-colors disabled:opacity-50",
+            stock === "in_stock"
+              ? "border-pitch/40 text-pitch"
+              : stock === "on_way"
+                ? "border-sky-400/40 text-sky-300"
+                : "border-red-500/40 text-red-300"
+          )}
+        >
+          {STOCK_STATUSES.map((s) => (
+            <option key={s.value} value={s.value} className="bg-ink-2 text-cream">
+              {s.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {/* featured */}
       <div className="flex items-center gap-2 lg:justify-center">

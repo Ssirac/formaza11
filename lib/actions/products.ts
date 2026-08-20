@@ -189,6 +189,24 @@ export async function setProductFeatured(
   }
 }
 
+export async function setProductStock(
+  id: string,
+  stockStatus: "in_stock" | "on_way" | "pre_order"
+): Promise<ActionResult> {
+  try {
+    await assertAdmin();
+    const p = await prisma.product.update({
+      where: { id },
+      data: { stockStatus },
+      select: { slug: true },
+    });
+    revalidateAll(p.slug);
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: errorMessage(e) };
+  }
+}
+
 /** Upload a base64 data URI via Cloudinary; returns the hosted URL. */
 export async function uploadProductImage(
   dataUri: string
