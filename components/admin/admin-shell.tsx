@@ -87,7 +87,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Desktop sidebar */}
       <aside className="sticky top-0 hidden h-screen flex-col gap-6 border-r border-line bg-ink-2/40 p-5 lg:flex">
         <Link href="/admin">
-          <Logo />
+          <Logo showText={false} />
         </Link>
         <NavLinks />
         <Bottom />
@@ -96,7 +96,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Mobile top bar */}
       <div className="flex items-center justify-between border-b border-line bg-ink-2/40 px-4 py-3 lg:hidden">
         <Link href="/admin">
-          <Logo />
+          <Logo showText={false} />
         </Link>
         <button
           type="button"
@@ -117,7 +117,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           />
           <div className="absolute left-0 top-0 flex h-full w-72 flex-col gap-6 border-r border-line bg-ink p-5">
             <div className="flex items-center justify-between">
-              <Logo />
+              <Logo showText={false} />
               <button
                 type="button"
                 onClick={() => setOpen(false)}
