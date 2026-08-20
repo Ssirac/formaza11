@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Shirt } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Watermark } from "./watermark";
 
 export function ProductGallery({
   images,
@@ -39,6 +40,7 @@ export function ProductGallery({
             )}
           />
         ))}
+        <Watermark size="text-lg sm:text-xl" />
       </div>
 
       {images.length > 1 && (

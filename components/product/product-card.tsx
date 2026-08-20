@@ -8,6 +8,7 @@ import { Shirt } from "lucide-react";
 import type { ProductDTO } from "@/lib/types";
 import { SizeChips } from "./size-chips";
 import { StockBadge } from "./stock-badge";
+import { Watermark } from "./watermark";
 import { trackAndOpen } from "./order-util";
 import { WhatsAppIcon } from "@/components/ui/icons";
 import { buttonClasses } from "@/components/ui/button";
@@ -117,6 +118,7 @@ export function ProductCard({
           </div>
         )}
 
+        <Watermark size="text-[9px] sm:text-[11px]" rows={5} />
         <span className="sheen z-10" aria-hidden />
 
         <span className="absolute left-3 top-3 rounded-full border border-white/10 bg-black/50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-silver backdrop-blur-md">
