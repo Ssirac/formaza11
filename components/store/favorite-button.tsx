@@ -41,7 +41,9 @@ export function FavoriteButton({
       <Heart
         className={cn(
           "h-[18px] w-[18px] transition-all",
-          active ? "fill-gold text-gold" : "text-cream"
+          active
+            ? "scale-110 fill-red-500 text-red-500"
+            : "text-cream hover:text-red-400"
         )}
       />
     </button>
