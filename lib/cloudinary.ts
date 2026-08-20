@@ -1,5 +1,6 @@
 import "server-only";
 import { v2 as cloudinary } from "cloudinary";
+import { withCloudinaryWatermark } from "@/lib/image-watermark";
 
 let configured = false;
 
@@ -30,5 +31,6 @@ export async function uploadImage(dataUri: string): Promise<string> {
     resource_type: "image",
     transformation: [{ quality: "auto", fetch_format: "auto" }],
   });
-  return res.secure_url;
+  // Bake the FORMAZA11 watermark into the stored delivery URL.
+  return withCloudinaryWatermark(res.secure_url);
 }

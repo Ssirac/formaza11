@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Shirt } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Watermark } from "./watermark";
+import { withCloudinaryWatermark } from "@/lib/image-watermark";
 
 export function ProductGallery({
   images,
@@ -29,7 +29,7 @@ export function ProductGallery({
         {images.map((src, i) => (
           <Image
             key={src + i}
-            src={src}
+            src={withCloudinaryWatermark(src)}
             alt={alt}
             fill
             priority={i === 0}
@@ -40,7 +40,6 @@ export function ProductGallery({
             )}
           />
         ))}
-        <Watermark size="text-lg sm:text-xl" />
       </div>
 
       {images.length > 1 && (
