@@ -83,7 +83,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-[260px_1fr]">
+    <div className="min-h-screen lg:grid lg:grid-cols-[220px_1fr]">
       {/* Desktop sidebar */}
       <aside className="sticky top-0 hidden h-screen flex-col gap-6 border-r border-line bg-ink-2/40 p-5 lg:flex">
         <Link href="/admin">
@@ -133,7 +133,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      <main className="min-w-0 p-4 sm:p-6 lg:p-8">{children}</main>
+      <main className="min-w-0 p-4 sm:p-6 lg:py-8 lg:pl-6 lg:pr-5">{children}</main>
     </div>
   );
 }

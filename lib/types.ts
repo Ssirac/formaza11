@@ -11,6 +11,7 @@ export type ProductDTO = {
   isHidden: boolean;
   isFeatured: boolean;
   stockStatus: string;
+  quantity: number | null;
   clickCount: number;
   createdAt: string;
 };

@@ -147,7 +147,16 @@ export function ProductCard({
       />
 
       <div className="flex flex-1 flex-col gap-3 p-4">
-        <StockBadge status={product.stockStatus} className="self-start" />
+        <div className="flex flex-wrap items-center gap-2">
+          <StockBadge status={product.stockStatus} />
+          {product.quantity != null &&
+            product.quantity >= 1 &&
+            product.quantity <= 5 && (
+              <span className="inline-flex items-center rounded-full border border-red-500/40 bg-red-500/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-red-400">
+                Son {product.quantity} ədəd
+              </span>
+            )}
+        </div>
         <Link href={`/forma/${product.slug}`} className="min-w-0">
           <h3 className="truncate font-display text-lg font-bold italic leading-tight text-cream transition-colors group-hover:text-gold">
             {product.name}

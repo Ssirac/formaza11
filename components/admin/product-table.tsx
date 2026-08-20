@@ -5,12 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Pencil, Trash2, Shirt, MousePointerClick } from "lucide-react";
+import { Pencil, Trash2, Shirt } from "lucide-react";
 import type { AdminProductListItem } from "@/lib/admin-data";
 import {
   setProductHidden,
   setProductFeatured,
   setProductStock,
+  setProductQuantity,
   deleteProduct,
 } from "@/lib/actions/products";
 import { STOCK_STATUSES } from "@/lib/constants";
@@ -61,7 +62,7 @@ export function ProductTable({ products }: { products: AdminProductListItem[] })
           <span>Stok</span>
           <span className="text-center">Seçilmiş</span>
           <span className="text-center">Gizli</span>
-          <span className="text-center">Klik</span>
+          <span className="text-center">Say</span>
           <span className="text-right">Qiymət (₼)</span>
           <span className="text-right">Əməliyyat</span>
         </div>
@@ -96,7 +97,26 @@ function ProductRow({
   const [featured, setFeatured] = useState(product.isFeatured);
   const [hidden, setHidden] = useState(product.isHidden);
   const [stock, setStock] = useState(product.stockStatus);
+  const [qty, setQty] = useState(
+    product.quantity == null ? "" : String(product.quantity)
+  );
   const [busy, setBusy] = useState(false);
+
+  async function saveQty() {
+    const t = qty.trim();
+    const num = t === "" ? null : Number(t);
+    if (num !== null && (!Number.isFinite(num) || num < 0)) {
+      setQty(product.quantity == null ? "" : String(product.quantity));
+      return;
+    }
+    if (num === product.quantity) return;
+    const res = await setProductQuantity(product.id, num);
+    if (!res.ok) toast.error(res.error ?? "Dəyişmədi");
+    else {
+      toast.success("Say yeniləndi");
+      router.refresh();
+    }
+  }
 
   async function changeStock(value: string) {
     const prev = stock;
@@ -227,12 +247,22 @@ function ProductRow({
         />
       </div>
 
-      {/* clicks */}
-      <div className="flex items-center gap-1.5 text-sm text-muted lg:justify-center">
-        <MousePointerClick className="h-4 w-4 text-faint lg:hidden" />
-        <span className={cn(product.clickCount > 0 && "text-gold")}>
-          {product.clickCount}
-        </span>
+      {/* quantity (admin-only count) */}
+      <div className="flex items-center gap-2 lg:justify-center">
+        <span className="text-xs text-muted lg:hidden">Say:</span>
+        <input
+          type="number"
+          min="0"
+          inputMode="numeric"
+          value={qty}
+          onChange={(e) => setQty(e.target.value)}
+          onBlur={saveQty}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+          }}
+          placeholder="—"
+          className="h-9 w-16 rounded-lg border border-line-strong bg-ink-2 px-2 text-center text-sm text-cream outline-none transition-colors hover:border-gold/50 focus:border-gold"
+        />
       </div>
 
       {/* price (admin-only) */}

@@ -27,6 +27,7 @@ model Product {
   costPrice    Float?      // 1688 / China cost
   shippingCost Float?      // delivery cost
   salePrice    Float?      // final price shown to the customer (via WhatsApp)
+  quantity     Int?        // admin-only stock count (never shown publicly)
   clicks      ClickEvent[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

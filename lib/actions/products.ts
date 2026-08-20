@@ -207,6 +207,28 @@ export async function setProductStock(
   }
 }
 
+export async function setProductQuantity(
+  id: string,
+  quantity: number | null
+): Promise<ActionResult> {
+  try {
+    await assertAdmin();
+    const q =
+      quantity == null || !Number.isFinite(quantity)
+        ? null
+        : Math.max(0, Math.trunc(quantity));
+    const p = await prisma.product.update({
+      where: { id },
+      data: { quantity: q },
+      select: { slug: true },
+    });
+    revalidateAll(p.slug);
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: errorMessage(e) };
+  }
+}
+
 /** Upload a base64 data URI via Cloudinary; returns the hosted URL. */
 export async function uploadProductImage(
   dataUri: string
